@@ -4,6 +4,8 @@
 # server.R file                  #
 ##################################
 
+
+
 library(shiny)
 library(plotly)
 library(dplyr)
@@ -12,7 +14,15 @@ library(dplyr)
 data_long <- read.csv("../data/clean/cleaned-incidence-Melanoma-in-Victoria-1982-2021.csv")
 mortality_data_long <- read.csv("../data/clean/cleaned-mortality-Melanoma-in-Victoria-1982-2021.csv")
 
-function(input, output) {
+function(input, output, session) {
+  
+  # Show introduction modal when the app starts
+  showModal(modalDialog(
+    title = "Welcome to the App!",
+    "This application visualizes the incidence and mortality rates of melanoma in Victoria from 1982 to 2021.",
+    easyClose = TRUE
+  ))
+  
   # Filter data for Incidence Plot
   filtered_data_incidence <- reactive({
     data_long[data_long$Sex %in% input$sexInput & data_long$AgeGroup == input$ageGroupInput,]

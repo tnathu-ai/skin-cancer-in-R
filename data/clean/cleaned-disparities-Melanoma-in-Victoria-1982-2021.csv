@@ -1,0 +1,56 @@
+"Period","Characteristic","Subgroup","Sex","Observed","Expected","SIR","CI_low","CI_high"
+"2019-2021","Socio-economic quintile","Most disadvantaged 1","Persons",1313,1733.6,75.7,71.8,79.9
+"2019-2021","Socio-economic quintile","2","Persons",1557,1699.7,91.6,87.2,96.3
+"2019-2021","Socio-economic quintile","3 (ref)","Persons",1694,NA,NA,NA,NA
+"2019-2021","Socio-economic quintile","4","Persons",1674,1686.4,99.3,94.6,104.1
+"2019-2021","Socio-economic quintile","Least disadvantaged 5","Persons",1977,1660.9,119,113.9,124.4
+"2019-2021","Socio-economic quintile","Most disadvantaged 1","Males",761,1015.3,75,69.8,80.5
+"2019-2021","Socio-economic quintile","2","Males",879,998.5,88,82.4,94
+"2019-2021","Socio-economic quintile","3 (ref)","Males",1003,NA,NA,NA,NA
+"2019-2021","Socio-economic quintile","4","Males",990,1000.2,99,93,105.3
+"2019-2021","Socio-economic quintile","Least disadvantaged 5","Males",1121,999.6,112.1,105.8,118.9
+"2019-2021","Socio-economic quintile","Most disadvantaged 1","Females",552,706.1,78.2,71.9,85
+"2019-2021","Socio-economic quintile","2","Females",678,696.4,97.4,90.3,105
+"2019-2021","Socio-economic quintile","3 (ref)","Females",691,NA,NA,NA,NA
+"2019-2021","Socio-economic quintile","4","Females",684,689.9,99.1,92,106.9
+"2019-2021","Socio-economic quintile","Least disadvantaged 5","Females",856,670.7,127.6,119.4,136.5
+"2019-2021","Remoteness","Major cities (ref)","Persons",5340,NA,NA,NA,NA
+"2019-2021","Remoteness","Rest of Victoria","Persons",2913,2016.5,144.5,139.3,149.8
+"2019-2021","Remoteness","Major cities (ref)","Males",3053,NA,NA,NA,NA
+"2019-2021","Remoteness","Rest of Victoria","Males",1725,1217.1,141.7,135.2,148.6
+"2019-2021","Remoteness","Major cities (ref)","Females",2287,NA,NA,NA,NA
+"2019-2021","Remoteness","Rest of Victoria","Females",1188,819.4,145,137,153.5
+"2016-2020","Aboriginality","Aboriginal Victorians","Persons",68,66.2,102.7,81,130.2
+"2016-2020","Aboriginality","Other Victorians (ref)","Persons",14316,NA,NA,NA,NA
+"2016-2020","Aboriginality","Aboriginal Victorians","Males",36,35.7,100.7,72.6,139.6
+"2016-2020","Aboriginality","Other Victorians (ref)","Males",8148,NA,NA,NA,NA
+"2016-2020","Aboriginality","Aboriginal Victorians","Females",32,30.3,105.5,74.6,149.2
+"2016-2020","Aboriginality","Other Victorians (ref)","Females",6168,NA,NA,NA,NA
+"2019-2021","Integrated Cancer Service (ICS)","All (ref)","Persons",8252,NA,NA,NA,NA
+"2019-2021","Integrated Cancer Service (ICS)","North Eastern Melbourne","Persons",1676,1935.1,86.6,82.6,90.9
+"2019-2021","Integrated Cancer Service (ICS)","Southern Melbourne","Persons",2305,2241.1,102.9,98.7,107.1
+"2019-2021","Integrated Cancer Service (ICS)","West Central Melbourne","Persons",1089,1626.7,66.9,63.1,71
+"2019-2021","Integrated Cancer Service (ICS)","Barwon South Western Regional","Persons",848,624.8,135.7,126.9,145.2
+"2019-2021","Integrated Cancer Service (ICS)","Gippsland Regional","Persons",623,478.9,130.1,120.3,140.7
+"2019-2021","Integrated Cancer Service (ICS)","Grampians Regional","Persons",470,369.5,127.2,116.2,139.3
+"2019-2021","Integrated Cancer Service (ICS)","Hume Regional","Persons",615,457.3,134.5,124.3,145.6
+"2019-2021","Integrated Cancer Service (ICS)","Loddon Mallee Regional","Persons",626,518.6,120.7,111.6,130.5
+"2019-2021","Integrated Cancer Service (ICS)","All (ref)","Males",4778,NA,NA,NA,NA
+"2019-2021","Integrated Cancer Service (ICS)","North Eastern Melbourne","Males",931,1103.7,84.4,79.1,89.9
+"2019-2021","Integrated Cancer Service (ICS)","Southern Melbourne","Males",1350,1287.7,104.8,99.4,110.6
+"2019-2021","Integrated Cancer Service (ICS)","West Central Melbourne","Males",618,921.9,67,62,72.5
+"2019-2021","Integrated Cancer Service (ICS)","Barwon South Western Regional","Males",485,364.6,133,121.7,145.4
+"2019-2021","Integrated Cancer Service (ICS)","Gippsland Regional","Males",363,291.5,124.5,112.4,138
+"2019-2021","Integrated Cancer Service (ICS)","Grampians Regional","Males",267,219.2,121.8,108,137.3
+"2019-2021","Integrated Cancer Service (ICS)","Hume Regional","Males",375,277.4,135.2,122.1,149.6
+"2019-2021","Integrated Cancer Service (ICS)","Loddon Mallee Regional","Males",389,312,124.7,112.9,137.7
+"2019-2021","Integrated Cancer Service (ICS)","All (ref)","Females",3474,NA,NA,NA,NA
+"2019-2021","Integrated Cancer Service (ICS)","North Eastern Melbourne","Females",745,824.7,90.3,84.1,97.1
+"2019-2021","Integrated Cancer Service (ICS)","Southern Melbourne","Females",955,949.6,100.6,94.4,107.2
+"2019-2021","Integrated Cancer Service (ICS)","West Central Melbourne","Females",471,702.5,67,61.3,73.4
+"2019-2021","Integrated Cancer Service (ICS)","Barwon South Western Regional","Females",363,259.7,139.8,126.1,154.9
+"2019-2021","Integrated Cancer Service (ICS)","Gippsland Regional","Females",260,191.8,135.5,120,153.1
+"2019-2021","Integrated Cancer Service (ICS)","Grampians Regional","Females",203,151.4,134.1,116.8,153.8
+"2019-2021","Integrated Cancer Service (ICS)","Hume Regional","Females",240,184,130.4,114.9,148
+"2019-2021","Integrated Cancer Service (ICS)","Loddon Mallee Regional","Females",237,210.2,112.8,99.3,128.1
+"* = Number of expected cases is below 10 and hence no standardised incidence ratio is reported (See methods)",NA,NA,NA,NA,NA,NA,NA,NA

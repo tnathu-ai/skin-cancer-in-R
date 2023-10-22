@@ -1,108 +1,44 @@
 ##################################
 # Melanoma Incidence in Victoria #
-# by [Your Name or Organization] #
+# by tnathu-ai #
 # ui.R file                      #
 ##################################
+library(shiny)
+library(plotly)
 
-library(leaflet)
-library(shinydashboard)
-library(collapsibleTree)
-library(shinycssloaders)
-library(DT)
-library(tigris)
-library(ggplot2)
+# Colorblind-friendly colors - Okabe and Ito palette
+cb_palette <- c('Males' = '#E69F00', 'Females' = '#56B4E9')
+title_color <- '#CC79A7'  # Dark pink in Okabe and Ito palette
 
-###########
-# LOAD UI #
-###########
-
-shinyUI(fluidPage(
-  
-  # load custom stylesheet if any
-  # includeCSS("www/style.css"),
-  
-  # remove shiny "red" warning messages on GUI
-  tags$style(type="text/css",
-             ".shiny-output-error { visibility: hidden; }",
-             ".shiny-output-error:before { visibility: hidden; }"
-  ),
-  
-  # load page layout
-  dashboardPage(
-    
-    skin = "green",
-    
-    dashboardHeader(title="Melanoma Incidence in Victoria", titleWidth = 300),
-    
-    dashboardSidebar(width = 300,
-                     sidebarMenu(
-                       menuItem("Home", tabName = "home", icon = icon("home")),
-                       menuItem("Yearly Cases", tabName = "incidence", icon = icon("line-chart")),
-                       menuItem("Disparities Analysis", tabName = "disparities", icon = icon("bar-chart")),
-                       menuItem("Mortality Analysis", tabName = "mortality", icon = icon("heart-o")),
-                       menuItem("Survival Rates", tabName = "survival", icon = icon("medkit"))
-                       # You can continue adding more menu items as needed
-                     )
-                     
-    ), # end dashboardSidebar
-    
-    dashboardBody(
-      
-      tabItems(
-        
-        tabItem(tabName = "home",
-                # Home section content goes here
-        ),
-        
-        tabItem(tabName = "incidence",
-                fluidPage(
-                  titlePanel("Melanoma Incidence in Victoria (1982-2021)"),
-                  sidebarLayout(
-                    sidebarPanel(
-                      # Add controls for filtering or selecting data
-                    ),
-                    mainPanel(
-                      plotOutput("timeSeriesPlot")
-                    )
-                  )
-                )
-        ),
-        
-        tabItem(tabName = "disparities",
-                fluidPage(
-                  selectInput("characteristic", "Select Characteristic", 
-                              unique(df_disparities$Characteristic)),
-                  plotOutput("barPlot")
-                )
-        ),
-        
-        tabItem(tabName = "mortality",
-                fluidPage(
-                  titlePanel("Melanoma Mortality in Victoria 1982-2021"),
-                  sidebarLayout(
-                    sidebarPanel(
-                      selectInput("sexInput", "Select Gender:", 
-                                  choices = unique(mortality_data_long$Sex), 
-                                  selected = "Males"),
-                      sliderInput("yearInput", "Select Year:", 
-                                  min = min(mortality_data_long$Year), 
-                                  max = max(mortality_data_long$Year), 
-                                  value = min(mortality_data_long$Year),
-                                  step = 1)
-                    ),
-                    mainPanel(
-                      plotOutput("mortalityPlot")
-                    )
-                  )
-                )
-        ),
-        
-        # You can continue adding more tab items for other sections like "Survival Rates"
-        
-      ) # end tabItems
-      
-    ) # end dashboardBody
-    
-  ) # end dashboardPage
-  
-)) # end shinyUI
+fluidPage(
+  titlePanel(tags$span("Melanoma Incidence and Mortality in Victoria (1982-2021)", style = paste0("color:", title_color))),
+  windowTitle = "Melanoma Incidence and Mortality",  # This sets the browser window title
+  padding = 5,  
+  sidebarLayout(
+    sidebarPanel(
+      selectInput("sexInput", "Select Gender:", 
+                  choices = unique(mortality_data_long$Sex), 
+                  selected = c("Males", "Females"),
+                  multiple = TRUE),
+      selectInput("ageGroupInput", "Select Age Group:",
+                  choices = unique(mortality_data_long$AgeGroup),
+                  selected = "20-24"),
+      wellPanel(
+        h4("Definitions:"),
+        tags$ul(
+          tags$li("Age-standardised rate (ASR): Provides the capacity to compare..."),
+          tags$li("Crude rate (CR): The number of diagnoses..."),
+          tags$li("Age-specific rate: Number of diagnoses..."),
+          tags$li("Standardised incidence ratio (SIR): A Standardised Incidence Ratio...")
+        )
+      )
+    ),
+    mainPanel(
+      plotlyOutput("timeSeriesPlot"),
+      tags$br(),  # This line creates a break between the plots
+      tags$br(),  # Optional: Add more breaks if more space is needed
+      plotlyOutput("mortalityPlot"),
+      tags$a("Source: Victorian Cancer Registry (2022)", href = "https://www.cancervic.org.au/research/vcr", target = "_blank", style = "color:gray;") # Making the source a clickable link
+    )
+  )
+)

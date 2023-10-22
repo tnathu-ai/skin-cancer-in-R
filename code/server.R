@@ -5,50 +5,57 @@
 ##################################
 
 library(shiny)
-library(tidyverse)
-library(leaflet.extras)
-library(rvest)
+library(plotly)
+library(dplyr)
 
-#####################
-# SUPPORT FUNCTIONS #
-#####################
+# Load data
+data_long <- read.csv("../data/clean/cleaned-incidence-Melanoma-in-Victoria-1982-2021.csv")
+mortality_data_long <- read.csv("../data/clean/cleaned-mortality-Melanoma-in-Victoria-1982-2021.csv")
 
-# function to retrieve a melanoma image from the melanoma wiki page
-melanoma_image <- function (melanoma_Type){
+function(input, output) {
+  # Filter data for Incidence Plot
+  filtered_data_incidence <- reactive({
+    data_long[data_long$Sex %in% input$sexInput & data_long$AgeGroup == input$ageGroupInput,]
+  })
   
-  melanoma_WikiUrl <- gsub(" ","_",paste0("https://en.wikipedia.org/wiki/",melanoma_Type))
-  melanoma_Img <- read_html(melanoma_WikiUrl)
-  melanoma_Img <- melanoma_Img %>% html_nodes("img")
+  # Filter data for Mortality Plot
+  filtered_data_mortality <- reactive({
+    mortality_data_long %>%
+      filter(AgeGroup == input$ageGroupInput, Sex %in% input$sexInput)
+  })
   
-  list_melanoma_Img <- (grepl("This is a featured article", melanoma_Img) | grepl("Question_book-new.svg.png", melanoma_Img) | grepl("Listen to this article", melanoma_Img) | grepl("This is a good article", melanoma_Img))
-  melanoma_Img <- melanoma_Img[min(which(list_melanoma_Img == FALSE))]
+  # Determine global x-axis range for synchronization
+  global_xrange <- range(c(data_long$Year, mortality_data_long$Year))
   
-  melanoma_Img <- gsub("\"","'",melanoma_Img)
-  melanoma_Img <- gsub("//upload.wikimedia.org","https://upload.wikimedia.org",melanoma_Img)
-  melanoma_Img <- sub("<img","<img style = 'max-width:100%; max-height:200px; margin: 10px 0px 0px 0px; border-radius: 5%; border: 1px solid black;'",melanoma_Img)
+  # Render Incidence Plot
+  output$timeSeriesPlot <- renderPlotly({
+    plot_ly(data = filtered_data_incidence(), x = ~Year, y = ~Cases, color = ~Sex, colors = cb_palette, 
+            type = "scatter", mode = "lines",
+            hoverinfo = "text",
+            text = ~paste("Year:", Year, "<br>Sex:", Sex, "<br>Age Group:", AgeGroup, "<br>Cases:", Cases)) %>%
+      layout(title = paste("Yearly Melanoma Cases in Victoria by Gender (Age Group:", input$ageGroupInput, ")"),
+             xaxis = list(title = "Year", range = global_xrange),
+             yaxis = list(title = "Number of Cases")) %>%
+      config(displayModeBar = FALSE)  # Hides the plotly default toolbox
+  })
   
-  return(melanoma_Img)
+  # Render Mortality Plot
+  output$mortalityPlot <- renderPlotly({
+    p <- filtered_data_mortality() %>%
+      plot_ly(x = ~Year,
+              y = ~Value,
+              color = ~Sex,
+              colors = cb_palette,
+              type = "scatter",
+              mode = "lines+markers",
+              hoverinfo = "text",
+              text = ~paste("Year:", Year, "<br>Sex:", Sex, "<br>Age Group:", AgeGroup,
+                            "<br>ASR:", ASR, "<br>Crude Rate:", CrudeRate)) %>%
+      layout(title = paste("Melanoma Mortality in Victoria by Year and Gender (Age Group:", input$ageGroupInput, ")"),
+             xaxis = list(title = "Year", range = global_xrange),
+             yaxis = list(title = "Age Specific Rate")) %>%
+      config(displayModeBar = FALSE)  # Hides the plotly default toolbox
+    
+    p
+  })
 }
-
-# function that builds the melanoma card html pop up
-melanoma_card <- function (melanoma_Type, melanoma_Subtype, melanoma_Staging, melanoma_Prognosis, melanoma_Incidence, melanoma_Treatment) {
-  
-  # ... (similar transformation as above with park_card, but adapted for the new context)
-}
-
-##################
-# DATA WRANGLING #
-##################
-
-incidence <- read.csv("../data/clean/cleaned-incidence-Melanoma-in-Victoria-1982-2021.csv")
-disparities <- read.csv("../data/clean/cleaned-disparities-Melanoma-in-Victoria-1982-2021.csv")
-mortality <- read.csv("../data/clean/cleaned-mortality-Melanoma-in-Victoria-1982-2021.csv")
-
-################
-# SERVER LOGIC #
-################
-
-shinyServer(function(input, output) {
-  
-  # ... (rest of the code, adjusted for melanoma studies)
-})

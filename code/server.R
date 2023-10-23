@@ -13,15 +13,30 @@ library(dplyr)
 # Load data
 data_long <- read.csv("../data/clean/cleaned-incidence-Melanoma-in-Victoria-1982-2021.csv")
 mortality_data_long <- read.csv("../data/clean/cleaned-mortality-Melanoma-in-Victoria-1982-2021.csv")
+overall_data <- read.csv("../data/clean/overall_melanoma_rates.csv")
+men_data <- read.csv("../data/clean/men_melanoma_rates.csv")
+women_data <- read.csv("../data/clean/women_melanoma_rates.csv")
 
 function(input, output, session) {
   
   # Show introduction modal when the app starts
   showModal(modalDialog(
     title = "Welcome to the App!",
-    "This application visualizes the incidence and mortality rates of melanoma in Victoria from 1982 to 2021.",
-    easyClose = TRUE
+    "Do you know about melanoma - the most dangerous form of skin cancer, caused by overexposure to ultraviolet (UV) radiation from the sun?",
+    selectInput("startup_ageGroupInput", "Please enter your age group:", 
+                choices = c("0-4", "5-9", "10-14", "15-19", "20-24", "25-29", "30-34", "35-39", "40-44", "45-49", "50-54", "55-59", "60-64", "65-69", "70-74", "75-79", "80-84", "85+")),
+    footer = tagList(
+      modalButton("Cancel"),
+      actionButton("submitBtn", "Submit")
+    ),
+    easyClose = FALSE
   ))
+  
+  # Update default age group based on modal input and close modal on submit
+  observeEvent(input$submitBtn, {
+    updateSelectInput(session, "ageGroupInput", selected = input$startup_ageGroupInput)
+    removeModal()
+  })
   
   # Filter data for Incidence Plot
   filtered_data_incidence <- reactive({
@@ -67,5 +82,32 @@ function(input, output, session) {
       config(displayModeBar = FALSE)  # Hides the plotly default toolbox
     
     p
+  })
+  
+  # Render Overall Melanoma Rates Plot
+  output$overallPlot <- renderPlotly({
+    plot_ly(data = overall_data, x = ~Country, y = ~ASR, type = "bar", 
+            color = ~ASR, colors = "Blues",
+            hoverinfo = "text",
+            text = ~paste("Country:", Country, "<br>ASR:", ASR)) %>%
+      layout(title = "Overall Melanoma Rates Globally")
+  })
+  
+  # Render Melanoma Rates in Men Plot
+  output$menPlot <- renderPlotly({
+    plot_ly(data = men_data, x = ~Country, y = ~ASR, type = "bar", 
+            color = ~ASR, colors = "Blues",
+            hoverinfo = "text",
+            text = ~paste("Country:", Country, "<br>ASR:", ASR)) %>%
+      layout(title = "Melanoma Rates in Men Globally")
+  })
+  
+  # Render Melanoma Rates in Women Plot
+  output$womenPlot <- renderPlotly({
+    plot_ly(data = women_data, x = ~Country, y = ~ASR, type = "bar", 
+            color = ~ASR, colors = "Reds",
+            hoverinfo = "text",
+            text = ~paste("Country:", Country, "<br>ASR:", ASR)) %>%
+      layout(title = "Melanoma Rates in Women Globally")
   })
 }

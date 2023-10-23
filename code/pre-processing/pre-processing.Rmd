@@ -1,15 +1,12 @@
 ---
-title: "pre-processing"
-author: "Thu Tran"
+title: "pre-processing & eda"
+author: "Thu Tran - s3879312"
 date: "`r Sys.Date()`"
 output: pdf_document
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
 
-```{r}
+```{r libraries}
 library(readxl)
 library(tidyr)
 library(dplyr)
@@ -20,80 +17,27 @@ library(shiny)
 library(stringr)
 ```
 
-# Victoria 
-source: https://www.cancervic.org.au/research/vcr
 
-```{r data}
-# source: https://www.cancervic.org.au/research/vcr
+
+```{r pre-process: Incidence & Mortality, source: https://www.cancervic.org.au/research/vcr}
+
+# Incidence
 df_case <- read_excel("../../data/raw/Melanoma-in-Victoria-1982-2021.xlsx", sheet = "Incidence", skip = 4)
-head(df_case)
-df_disparities <- read_excel("../../data/raw/Melanoma-in-Victoria-1982-2021.xlsx", sheet = "Disparities in incidence ", skip = 4)
-head(df_disparities)
-df_mortality <- read_excel("../../data/raw/Melanoma-in-Victoria-1982-2021.xlsx", sheet = "Mortality", skip = 4)
-head(df_mortality)
-df_survival <- read_excel("../../data/raw/Melanoma-in-Victoria-1982-2021.xlsx", sheet = "Survival", skip = 4)
-head(df_survival)
-```
-
-```{r incidence}
 # Filter for cases only and drop unnecessary columns
 data_cases <- df_case %>% 
   filter(Measure == "Cases") %>% 
   select(Year, Sex, `0-4`:`85+`)
-
 # Convert df_case to long format
 data_long <- data_cases %>% 
   pivot_longer(cols = `0-4`:`85+`, names_to = "AgeGroup", values_to = "Cases")
-
 # Save data_long to a CSV file
 write.csv(data_long, file = "../../data/clean/cleaned-incidence-Melanoma-in-Victoria-1982-2021.csv", row.names = FALSE)
+head(data_long)
+unique_age_groups <- unique(data_long$AgeGroup)
+unique_age_groups
 
-data_long
-```
-
-
-
-
-```{r disparities}
-
-# Remove rows with NA in "Period" column
-df_disparities <- df_disparities %>% filter(!is.na(Period))
-
-# Check if rows match the pattern
-matched_rows <- df_disparities %>% 
-  filter(str_detect(`Standardised incidence ratio`, "^\\d+\\.?\\d* \\[\\d+\\.?\\d*\\-\\d+\\.?\\d*\\]$"))
-
-# Check if there are any non-matching rows
-if (nrow(matched_rows) < nrow(df_disparities)) {
-  problematic_rows <- df_disparities %>% 
-    anti_join(matched_rows)
-  print(problematic_rows)
-} else {
-  print("No problematic rows found!")
-}
-
-
-# Extract SIR value and Confidence Interval (CI)
-disparities_data_long <- df_disparities %>%
-  mutate(
-    SIR = str_extract(`Standardised incidence ratio`, "^\\d+\\.?\\d*"), # Extracting the leading numeric value
-    CI = str_extract(`Standardised incidence ratio`, "\\[.*\\]") # Extracting the value inside brackets
-  ) %>%
-  separate(CI, into = c("CI_low", "CI_high"), sep = "-") %>%
-  mutate(
-    SIR = as.numeric(SIR),
-    CI_low = as.numeric(str_replace_all(CI_low, "\\[|\\s", "")), # Removing bracket and spaces
-    CI_high = as.numeric(str_replace_all(CI_high, "\\]|\\s", "")) # Removing bracket and spaces
-  ) %>%
-  select(-`Standardised incidence ratio`)
-
-write.csv(disparities_data_long, file = "../../data/clean/cleaned-disparities-Melanoma-in-Victoria-1982-2021.csv", row.names = FALSE)
-
-disparities_data_long
-```
-
-
-```{r mortality}
+# Mortality
+df_mortality <- read_excel("../../data/raw/Melanoma-in-Victoria-1982-2021.xlsx", sheet = "Mortality", skip = 4)
 # Convert from wide format to long format
 mortality_data_long <- df_mortality %>%
   gather(`Age Group`, `Value`, `0-4`:`85+`) %>%
@@ -103,305 +47,61 @@ mortality_data_long <- df_mortality %>%
     AgeGroup = `Age Group`,     # Rename "Age Group" to "AgeGroup"
     CrudeRate = `Crude rate`    # Rename "Crude rate" to "CrudeRate"
   )
-
 write.csv(mortality_data_long, file = "../../data/clean/cleaned-mortality-Melanoma-in-Victoria-1982-2021.csv", row.names = FALSE)
-mortality_data_long
+head(mortality_data_long)
+unique_age_groups <- unique(mortality_data_long$AgeGroup)
+unique_age_groups
 ```
 
-Interactive Controls: Users can now select a specific gender and age group to view using the dropdown menus. By default, all data will be shown.
-Tooltip: Hovering over the plot will show specific data points, providing a more interactive experience.
-Help Text: Some explanatory text has been added for context.
 
 ```{r}
-library(shiny)
-library(plotly)
-
-# Colorblind-friendly colors
-cb_palette <- c('Males' = '#E69F00', 'Females' = '#56B4E9') # Okabe and Ito palette
-
-ui <- fluidPage(
-  titlePanel("Melanoma Incidence in Victoria (1982-2021)"),
-  sidebarLayout(
-    sidebarPanel(
-      selectInput("sex", "Select Gender:", choices = unique(data_long$Sex), selected = c("Males", "Females"), multiple = TRUE),
-      selectInput("ageGroup", "Select Age Group:", choices = unique(data_long$AgeGroup), selected = "20-24", multiple = TRUE),
-      wellPanel(
-        h4("Definitions:"),
-        tags$ul(
-          tags$li("Age-standardised rate (ASR): Provides the capacity to compare..."),
-          tags$li("Crude rate (CR): The number of diagnoses..."),
-          tags$li("Age-specific rate: Number of diagnoses..."),
-          tags$li("Standardised incidence ratio (SIR): A Standardised Incidence Ratio..."),
-        )
-      )
-    ),
-    mainPanel(
-      plotlyOutput("timeSeriesPlot"),
-      tags$p("Source: Victorian Cancer Registry (2022)", style = "color:gray;")
-    )
-  )
+# Overall Melanoma Rates
+overall <- data.frame(
+  Rank = c("World", 1:10),
+  Country = c("World", "Australia", "New Zealand", "Denmark", "The Netherlands", "Norway", "Sweden", "Switzerland", "Germany", "Slovenia", "Finland"),
+  Number = c(324635, 16171, 2801, 2886, 8310, 2567, 4266, 3357, 31468, 735, 2090),
+  ASR = c(3.4, 36.6, 31.6, 29.7, 27.0, 26.4, 23.3, 21.6, 20.5, 19.7, 19.5)
 )
-
-server <- function(input, output) {
-  
-  filtered_data <- reactive({
-    data_long[data_long$Sex %in% input$sex & data_long$AgeGroup %in% input$ageGroup,]
-  })
-
-  output$timeSeriesPlot <- renderPlotly({
-    plot_ly(data = filtered_data(), x = ~Year, y = ~Cases, color = ~Sex, colors = cb_palette, type = "scatter", mode = "lines", 
-            hoverinfo = "text",
-            text = ~paste("Year:", Year, "<br>Sex:", Sex, "<br>Age Group:", AgeGroup, "<br>Cases:", Cases)) %>%
-      layout(title = "Yearly Melanoma Cases in Victoria by Gender",
-             xaxis = list(title = "Year"),
-             yaxis = list(title = "Number of Cases")) %>%
-      config(displayModeBar = FALSE) # Hides the plotly default toolbox
-  })
-}
-
-shinyApp(ui = ui, server = server)
-
-```
-
-
-```{r}
-library(shiny)
-library(plotly)
-library(dplyr)
-
-ui <- fluidPage(
-  titlePanel("Disparities in Melanoma (ICD-10: C43) Incidence (2018-2020)"),
-  sidebarLayout(
-    sidebarPanel(
-      selectInput("characteristic", "Select Characteristic", unique(disparities_data_long$Characteristic)),
-      selectInput("sex", "Select Sex", unique(disparities_data_long$Sex)),
-      tags$br(),
-      tags$h4("Disparity Groups Explanation:"),
-      tags$p("Socio-economic quintile", tags$br(),
-             "[Reference population - Those living in areas classified as the middle (3rd) socio-economic quintile]", tags$br(),
-             "... explanation for socio-economic quintile ...", tags$br(),
-             "For more information, please refer to the Australian Bureau of Statistics website."),
-      tags$p("Remoteness", tags$br(),
-             "[Reference population - Those living in major cities]", tags$br(),
-             "... explanation for Remoteness ..."),
-      tags$p("Aboriginal and/or Torres Strait Islanders", tags$br(),
-             "[Reference population - Those who do not identify as Aboriginal and/or Torres Strait Islander]", tags$br(),
-             "... explanation for Aboriginal and/or Torres Strait Islanders ..."),
-      tags$p("Integrated Cancer Service (ICS)", tags$br(),
-             "[Reference population - The Victorian average]", tags$br(),
-             "... explanation for ICS ..."),
-      tags$p("Country of birth", tags$br(),
-             "[Reference population - Those born in Australia]", tags$br(),
-             "... explanation for Country of birth ...", tags$br(),
-             "ABS = Australian Bureau of Statistics"),
-      # Custom Legend
-      tags$br(),
-      tags$h4("Legend Explanation:"),
-      tags$div(style = "display: inline-block; vertical-align: middle; margin-right: 5px;",
-               tags$span(style = "display: inline-block; width: 15px; height: 15px; background-color: #E69F00; border-radius: 50%;")),
-      tags$span("Orange Circle: Represents the Standardised Incidence Ratio (SIR)"),
-      tags$br(),
-      tags$div(style = "display: inline-block; vertical-align: middle; margin-right: 5px;",
-               tags$span(style = "display: inline-block; width: 15px; height: 2px; background-color: #56B4E9;")),
-      tags$span("Blue Line: Represents the Confidence Interval (CI) for the SIR"),
-      tags$p("Source: Victorian Cancer Registry (2022)")
-    ),
-    mainPanel(
-      plotlyOutput("plotlyBarPlot")
-    )
-  )
+overall
+# Melanoma Rates in Men
+men <- data.frame(
+  Rank = c("World", 1:10),
+  Country = c("World", "Australia", "New Zealand", "The Netherlands", "Denmark", "Norway", "Switzerland", "Sweden", "Germany", "Slovenia", "Finland"),
+  Number = c(173844, 9462, 1541, 4420, 1382, 1298, 1822, 2146, 17260, 379, 1090),
+  ASR = c(3.8, 42.9, 34.8, 27.1, 26.2, 25.8, 22.8, 22.2, 21.1, 19.9, 19.5)
 )
-
-server <- function(input, output) {
-  
-  output$plotlyBarPlot <- renderPlotly({
-    df_selected <- disparities_data_long %>% 
-      filter(Characteristic == input$characteristic & Sex == input$sex) %>%
-      drop_na(SIR)
-    
-    p <- df_selected %>% 
-      plot_ly(x = ~Subgroup,
-              y = ~SIR, 
-              type = 'scatter', 
-              mode = 'markers',
-              size = ~SIR,
-              error_y = list(type = "data", array = ~CI_high - SIR, arrayminus = ~SIR - CI_low),
-              marker = list(color = '#E69F00', sizemode = "diameter"),
-              text = ~paste0("Subgroup: ", Subgroup, "<br>Sex: ", Sex, "<br>Observed: ", Observed, 
-                             "<br>Expected: ", Expected, "<br>SIR: ", SIR, "<br>CI: (", CI_low, "-", CI_high, ")"),
-              hoverinfo = "text") %>%
-      layout(title = paste("Disparity in", input$characteristic, "by Subgroup"),
-             yaxis = list(title = "Standardised Incidence Ratio (SIR)"),
-             xaxis = list(title = "Subgroup"),
-             showlegend = FALSE) %>% 
-      config(displayModeBar = FALSE)  # This hides the toolbox
-    
-    p
-  })
-  
-}
-
-shinyApp(ui, server)
-
-
-```
-
-the Okabe and Ito palette for color-blindness suitability.
-The plotly plot is interactive, and the toolbox is hidden.
-This layout should fit well on an HD screen (1080p) without scrolling due to the responsive design of Shiny and Plotly.
-
-```{r}
-
-# Colorblind-friendly colors - Okabe and Ito palette
-cb_palette <- c('Males' = '#E69F00', 'Females' = '#56B4E9')
-
-ui <- fluidPage(
-  titlePanel("Melanoma Mortality in Victoria 1982-2021"),
-  sidebarLayout(
-    sidebarPanel(
-      selectInput("sexInput", "Select Gender:", 
-                  choices = unique(mortality_data_long$Sex), 
-                  selected = c("Males", "Females"),
-                  multiple = TRUE),
-      selectInput("ageGroupInput", "Select Age Group:",
-                  choices = unique(mortality_data_long$`Age Group`),
-                  selected = "20-24",
-                  multiple = TRUE)
-    ),
-    mainPanel(
-      plotlyOutput("mortalityPlot"),
-      tags$p("Source: Victorian Cancer Registry (2022)", style = "color:gray;")
-    )
-  )
+men
+# Melanoma Rates in Women
+women <- data.frame(
+  Rank = c("World", 1:10),
+  Country = c("World", "Denmark", "Australia", "New Zealand", "Norway", "The Netherlands", "Sweden", "Belgium", "Switzerland", "Germany", "Ireland"),
+  Number = c(150791, 1504, 6709, 1260, 1269, 3890, 2120, 1951, 1535, 14208, 772),
+  ASR = c(3.0, 33.6, 30.8, 28.9, 27.5, 27.4, 24.6, 22.6, 20.8, 20.4, 20.3)
 )
+women
+write.csv(overall, "../../data/clean/overall_melanoma_rates.csv", row.names = FALSE)
+write.csv(men, "../../data/clean/men_melanoma_rates.csv", row.names = FALSE)
+write.csv(women, "../../data/clean/women_melanoma_rates.csv", row.names = FALSE)
 
-server <- function(input, output) {
-
-  output$mortalityPlot <- renderPlotly({
-    filtered_data <- mortality_data_long %>%
-      filter(`Age Group` %in% input$ageGroupInput, Sex %in% input$sexInput)
-
-    p <- filtered_data %>%
-      plot_ly(x = ~Year,
-              y = ~Value,
-              color = ~Sex,
-              colors = cb_palette,
-              type = "scatter",
-              mode = "lines+markers",
-              hoverinfo = "text",
-              text = ~paste("Year:", Year, "<br>Sex:", Sex, "<br>Age Group:", `Age Group`,
-                            "<br>Total Deaths:", `Total deaths`, "<br>ASR:", ASR, "<br>Crude Rate:", `Crude rate`)) %>%
-      layout(title = "Melanoma Mortality in Victoria by Year and Gender",
-             xaxis = list(title = "Year"),
-             yaxis = list(title = "Age Specific Rate")) %>%
-      config(displayModeBar = FALSE)  # Hides the plotly default toolbox
-
-    p
-  })
-}
-
-shinyApp(ui = ui, server = server)
 ```
 
 
 
-
-
-
-
 ```{r}
-library(shiny)
-library(plotly)
-library(dplyr)
-
 # Colorblind-friendly colors - Okabe and Ito palette
 cb_palette <- c('Males' = '#E69F00', 'Females' = '#56B4E9')
 title_color <- '#CC79A7'  # Dark pink in Okabe and Ito palette
 
-ui <- fluidPage(
-  titlePanel(tags$span("Melanoma Incidence and Mortality in Victoria (1982-2021)", style = paste0("color:", title_color))),
+navbarPage(
+  title = tags$span(
+    tags$img(src = "logo.png", height = "50px", width = "50px", style = "vertical-align: middle; margin-right: 10px;"),  # Adjust alignment with CSS
+    "Melanoma Incidence and Mortality in Victoria (1982-2021)"
+  ),
   windowTitle = "Melanoma Incidence and Mortality",  # This sets the browser window title
-  padding = 5,  # Adjust this value to your desired gap
-  sidebarLayout(
-    sidebarPanel(
-      selectInput("sexInput", "Select Gender:", 
-                  choices = unique(mortality_data_long$Sex), 
-                  selected = c("Males", "Females"),
-                  multiple = TRUE),
-      selectInput("ageGroupInput", "Select Age Group:",
-                  choices = unique(mortality_data_long$`Age Group`),
-                  selected = "20-24"),
-      wellPanel(
-        h4("Definitions:"),
-        tags$ul(
-          tags$li("Age-standardised rate (ASR): Provides the capacity to compare..."),
-          tags$li("Crude rate (CR): The number of diagnoses..."),
-          tags$li("Age-specific rate: Number of diagnoses..."),
-          tags$li("Standardised incidence ratio (SIR): A Standardised Incidence Ratio...")
-        )
-      )
-    ),
-    mainPanel(
-      plotlyOutput("timeSeriesPlot"),
-      tags$br(),  # This line creates a break between the plots
-      tags$br(),  # Optional: Add more breaks if more space is needed
-      plotlyOutput("mortalityPlot"),
-      tags$a("Source: Victorian Cancer Registry (2022)", href = "https://www.cancervic.org.au/research/vcr", target = "_blank", style = "color:gray;") # Making the source a clickable link
-    )
-  )
+  header = tags$head(tags$link(rel = "shortcut icon", type = "image/x-icon", href = "logo.ico")),  # Add favicon to the webpage
+  
+  # ... [rest of the ui.R code remains the same, with tabPanels, sidebarLayout, etc.] ...
 )
-
-
-server <- function(input, output) {
-
-  # Filter data for Incidence Plot
-  filtered_data_incidence <- reactive({
-    data_long[data_long$Sex %in% input$sexInput & data_long$AgeGroup == input$ageGroupInput,]
-  })
-
-  # Filter data for Mortality Plot
-  filtered_data_mortality <- reactive({
-    mortality_data_long %>%
-      filter(`Age Group` == input$ageGroupInput, Sex %in% input$sexInput)
-  })
-
-  # Determine global x-axis range for synchronization
-  global_xrange <- range(c(data_long$Year, mortality_data_long$Year))
-
-  # Render Incidence Plot
-  output$timeSeriesPlot <- renderPlotly({
-    plot_ly(data = filtered_data_incidence(), x = ~Year, y = ~Cases, color = ~Sex, colors = cb_palette, 
-            type = "scatter", mode = "lines",
-            hoverinfo = "text",
-            text = ~paste("Year:", Year, "<br>Sex:", Sex, "<br>Age Group:", AgeGroup, "<br>Cases:", Cases)) %>%
-      layout(title = paste("Yearly Melanoma Cases in Victoria by Gender (Age Group:", input$ageGroupInput, ")"),
-             xaxis = list(title = "Year", range = global_xrange),
-             yaxis = list(title = "Number of Cases")) %>%
-      config(displayModeBar = FALSE)  # Hides the plotly default toolbox
-  })
-
-  # Render Mortality Plot
-  output$mortalityPlot <- renderPlotly({
-    p <- filtered_data_mortality() %>%
-      plot_ly(x = ~Year,
-              y = ~Value,
-              color = ~Sex,
-              colors = cb_palette,
-              type = "scatter",
-              mode = "lines+markers",
-              hoverinfo = "text",
-              text = ~paste("Year:", Year, "<br>Sex:", Sex, "<br>Age Group:", `Age Group`,
-                            "<br>Total Deaths:", `Total deaths`, "<br>ASR:", ASR, "<br>Crude Rate:", `Crude rate`)) %>%
-      layout(title = paste("Melanoma Mortality in Victoria by Year and Gender (Age Group:", input$ageGroupInput, ")"),
-             xaxis = list(title = "Year", range = global_xrange),
-             yaxis = list(title = "Age Specific Rate")) %>%
-      config(displayModeBar = FALSE)  # Hides the plotly default toolbox
-
-    p
-  })
-}
-
-shinyApp(ui = ui, server = server)
 
 ```
 

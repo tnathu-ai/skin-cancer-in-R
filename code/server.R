@@ -17,6 +17,9 @@ overall_data <- read.csv("../data/clean/overall_melanoma_rates.csv")
 men_data <- read.csv("../data/clean/men_melanoma_rates.csv")
 women_data <- read.csv("../data/clean/women_melanoma_rates.csv")
 
+# Colorblind-friendly colors - Okabe and Ito palette
+cb_palette <- c('Males' = '#56B4E9', 'Females' = '#CC79A7')
+
 function(input, output, session) {
   
   # Show introduction modal when the app starts
@@ -87,27 +90,30 @@ function(input, output, session) {
   # Render Overall Melanoma Rates Plot
   output$overallPlot <- renderPlotly({
     plot_ly(data = overall_data, x = ~Country, y = ~ASR, type = "bar", 
-            color = ~ASR, colors = "Blues",
+            color = ~ASR, colors = c('#56B4E9', '#CC79A7'),  # Updated colors
             hoverinfo = "text",
             text = ~paste("Country:", Country, "<br>ASR:", ASR)) %>%
-      layout(title = "Overall Melanoma Rates Globally")
+      layout(title = "Overall Melanoma Rates Globally") %>%
+      config(displayModeBar = FALSE)  
   })
   
   # Render Melanoma Rates in Men Plot
   output$menPlot <- renderPlotly({
     plot_ly(data = men_data, x = ~Country, y = ~ASR, type = "bar", 
-            color = ~ASR, colors = "Blues",
+            color = ~ASR, colors = c('#56B4E9'),  # Updated colors
             hoverinfo = "text",
             text = ~paste("Country:", Country, "<br>ASR:", ASR)) %>%
-      layout(title = "Melanoma Rates in Men Globally")
+      layout(title = "Melanoma Rates in Men Globally") %>%
+      config(displayModeBar = FALSE)
   })
   
   # Render Melanoma Rates in Women Plot
   output$womenPlot <- renderPlotly({
     plot_ly(data = women_data, x = ~Country, y = ~ASR, type = "bar", 
-            color = ~ASR, colors = "Reds",
+            color = ~ASR, colors = c('#CC79A7'),  # Updated colors
             hoverinfo = "text",
             text = ~paste("Country:", Country, "<br>ASR:", ASR)) %>%
-      layout(title = "Melanoma Rates in Women Globally")
+      layout(title = "Melanoma Rates in Women Globally") %>%
+      config(displayModeBar = FALSE)
   })
 }

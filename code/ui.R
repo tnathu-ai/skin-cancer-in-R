@@ -10,28 +10,47 @@ library(plotly)
 # Colorblind-friendly colors - Okabe and Ito palette
 cb_palette <- c('Males' = '#56B4E9', 'Females' = '#CC79A7')
 # Load data
-data_long <- read.csv("../data/clean/cleaned-incidence-Melanoma-in-Victoria-1982-2021.csv")
-mortality_data_long <- read.csv("../data/clean/cleaned-mortality-Melanoma-in-Victoria-1982-2021.csv")
-overall_data <- read.csv("../data/clean/overall_melanoma_rates.csv")
-men_data <- read.csv("../data/clean/men_melanoma_rates.csv")
-women_data <- read.csv("../data/clean/women_melanoma_rates.csv")
-sunburn_data <- read.csv("../data/clean/sunburn.csv")
-protection_data <- read.csv("../data/clean/protection.csv")
-referenceSection <- function() {
-  tags$div(
-    tags$p("References:", style = "font-weight: bold;"),
-    tags$ul(
-      style = "color: gray;",  # Adjusting style to the entire list for consistency
-      tags$li("Cancer Council. “Preventing Skin Cancer.” Www.cancer.org.au, 2023, ", 
-              tags$a(href="https://www.cancer.org.au/cancer-information/causes-and-prevention/sun-safety/preventing-skin-cancer", "www.cancer.org.au/cancer-information/causes-and-prevention/sun-safety/preventing-skin-cancer."), 
-              "."),
-      tags$li("Australian Institute of Health and Welfare (AIHW). Australian Cancer Incidence and Mortality (ACIM) books. Canberra: AIHW."),
-      tags$li("Australia, Cancer. “What Are the Risk Factors for Melanoma?” Www.canceraustralia.gov.au, 18 Dec. 2019, ", 
-              tags$a(href="https://www.canceraustralia.gov.au/cancer-types/melanoma/awareness", "www.canceraustralia.gov.au/cancer-types/melanoma/awareness."), 
-              ".")
-    )
+data_long <- read.csv("www/cleaned-incidence-Melanoma-in-Victoria-1982-2021.csv")
+mortality_data_long <- read.csv("www/cleaned-mortality-Melanoma-in-Victoria-1982-2021.csv")
+overall_data <- read.csv("www/overall_melanoma_rates.csv")
+men_data <- read.csv("www/men_melanoma_rates.csv")
+women_data <- read.csv("www/women_melanoma_rates.csv")
+sunburn_data <- read.csv("www/sunburn.csv")
+protection_data <- read.csv("www/protection.csv")
+
+referenceSection <- function(type = NULL) {
+  
+  # Default melanoma references
+  melanoma_references <- tags$ul(
+    style = "color: gray;",  # Adjusting style to the entire list for consistency
+    tags$li("Cancer Council. “Preventing Skin Cancer.” Www.cancer.org.au, 2023, ", 
+            tags$a(href="https://www.cancer.org.au/cancer-information/causes-and-prevention/sun-safety/preventing-skin-cancer", "www.cancer.org.au/cancer-information/causes-and-prevention/sun-safety/preventing-skin-cancer."), 
+            "."),
+    tags$li("Australian Institute of Health and Welfare (AIHW). Australian Cancer Incidence and Mortality (ACIM) books. Canberra: AIHW."),
+    tags$li("Australia, Cancer. “What Are the Risk Factors for Melanoma?” Www.canceraustralia.gov.au, 18 Dec. 2019, ", 
+            tags$a(href="https://www.canceraustralia.gov.au/cancer-types/melanoma/awareness", "www.canceraustralia.gov.au/cancer-types/melanoma/awareness."), 
+            ".")
   )
+  
+  # Sunburn & Sun Protection references
+  sunburn_references <- tags$ul(
+    style = "color: gray;",  # Adjusting style to the entire list for consistency
+    tags$li("Australia, Cancer. “Sunburn and Sun Protection.” National Cancer Control Indicators, 4 Apr. 2019, ", 
+            tags$a(href="https://ncci.canceraustralia.gov.au/prevention/sun-exposure/sunburn-and-sun-protection", "ncci.canceraustralia.gov.au/prevention/sun-exposure/sunburn-and-sun-protection."), 
+            "."),
+    tags$li("Cancer Council. “Preventing Skin Cancer.” Www.cancer.org.au, 2023, ", 
+            tags$a(href="https://www.cancer.org.au/cancer-information/causes-and-prevention/sun-safety/preventing-skin-cancer", "www.cancer.org.au/cancer-information/causes-and-prevention/sun-safety/preventing-skin-cancer."), 
+            ".")
+  )
+  
+  # Return references based on type
+  if (is.null(type) || type == 'melanoma') {
+    return(melanoma_references)
+  } else if (type == 'sunburnProtection') {
+    return(sunburn_references)
+  }
 }
+
 
 
 navbarPage(
@@ -135,7 +154,8 @@ navbarPage(
                  radioButtons("displayMode", "Display Mode:", 
                               choices = c("Sunburn", "Sun Protection"), 
                               selected = "Sunburn", inline = TRUE)
-               )
+               ),
+               referenceSection('sunburnProtection'),  # Updated call to referenceSection
              ),
              mainPanel(
                uiOutput("sunburnProtectionTitle"),

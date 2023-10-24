@@ -90,10 +90,10 @@ navbarPage(
                wellPanel(
                  h4("Definitions:"),
                  tags$ul(
-                   tags$li("Age-standardised rate (ASR): Provides the capacity to compare..."),
-                   tags$li("Crude rate (CR): The number of diagnoses..."),
-                   tags$li("Age-specific rate: Number of diagnoses..."),
-                   tags$li("Standardised incidence ratio (SIR): A Standardised Incidence Ratio...")
+                   tags$li(HTML("<b>Age-standardised rate (ASR):</b> Allows comparison of populations with different age structures. It's a weighted average of new cases or deaths per 100,000 standardized to the World Segi standard population.")),
+                   tags$li(HTML("<b>Crude rate (CR):</b> Diagnoses per 100,000 population. It's calculated by dividing the number of newly diagnosed cases by the population estimate and then multiplying by 100,000.")),
+                   tags$li(HTML("<b>Age-specific rate:</b> Diagnoses per 100,000 population for a certain age range. It's calculated by dividing the number of new cases in the age group by the population of that age group and then multiplying by 100,000.")),
+                   tags$li(HTML("<b>Standardised incidence ratio (SIR):</b> Indicates if the observed number of cancer cases is higher or lower than expected based on a reference population. An SIR of 100 means observed cases equal expected cases. SIR >100 means more cases than expected; SIR <100 means fewer cases than expected. The significance of the difference can be evaluated using a 95% confidence interval. SIRs aren't shown when expected cases are less than 10 due to potential large fluctuation."))
                  ),
                  selectInput("sexInput", "Select Gender:", 
                              choices = sort(unique(mortality_data_long$Sex)),  # Sort gender categories
@@ -113,17 +113,15 @@ navbarPage(
                plotlyOutput("mortalityPlot", height = "400px"),  # Adjust height if necessary
                tags$a("Source: Victorian Cancer Registry (2022)", href = "https://www.cancervic.org.au/research/vcr", target = "_blank", style = "color:gray;") # Making the source a clickable link
              )
-           )),
+           )
+  ),
   
   tabPanel("Melanoma Rates Globally",
            sidebarLayout(
              sidebarPanel(
                h4("Definitions:"),
                tags$ul(
-                 tags$li("Age-standardised rate (ASR): Provides the capacity to compare..."),
-                 tags$li("Crude rate (CR): The number of diagnoses..."),
-                 tags$li("Age-specific rate: Number of diagnoses..."),
-                 tags$li("Standardised incidence ratio (SIR): A Standardised Incidence Ratio...")
+                 tags$li(HTML("<b>Age-standardised rate (ASR):</b> Allows comparison of populations with different age structures. It's a weighted average of new cases or deaths per 100,000 standardized to the World Segi standard population.")),
                ),
                selectInput("comparePlotInput", "Select Plots to Compare:",
                            choices = c("Men vs Women", "Men vs Overall", "Women vs Overall"),
@@ -154,8 +152,8 @@ navbarPage(
                wellPanel(
                  h4("Definitions:"),
                  tags$ul(
-                   tags$li("Sunburn: Any amount of reddening of the skin after being in the sun."),
-                   tags$li("Sun Protection: Use of a combination of two or more sun protection behaviours.")
+                   tags$li(tags$strong("Sunburn:"), " Any amount of reddening of the skin after being in the sun."),
+                   tags$li(tags$strong("Sun Protection:"), " Use of a combination of two or more sun protection behaviours.")
                  ),
                  radioButtons("displayMode", "Display Mode:", 
                               choices = c("Sunburn", "Sun Protection"), 

@@ -100,7 +100,8 @@ showModal(modalDialog(
       arrange(desc(ASR)) %>%
       plot_ly(x = ~Country, y = ~ASR, type = "bar", 
               color = ~ASR, colors = c('#56B4E9', '#CC79A7'),  # Updated colors
-              hoverinfo = "text") %>%
+              # Removed 'text' attribute
+              hoverinfo = "y") %>%
       layout(title = "Overall Melanoma Rates Globally") %>%
       config(displayModeBar = FALSE)  
   })
@@ -111,7 +112,8 @@ showModal(modalDialog(
       arrange(desc(ASR)) %>%
       plot_ly(x = ~Country, y = ~ASR, type = "bar", 
               color = ~ASR, colors = c('#56B4E9'),  # Updated colors
-              hoverinfo = "text") %>%
+              # Removed 'text' attribute
+              hoverinfo = "y") %>%
       layout(title = "Melanoma Rates in Men Globally") %>%
       config(displayModeBar = FALSE)
   })
@@ -122,11 +124,12 @@ showModal(modalDialog(
       arrange(desc(ASR)) %>%
       plot_ly(x = ~Country, y = ~ASR, type = "bar", 
               color = ~ASR, colors = c('#CC79A7'),  # Updated colors
-              hoverinfo = "text") %>%
+              # Removed 'text' attribute
+              hoverinfo = "y") %>%
       layout(title = "Melanoma Rates in Women Globally") %>%
       config(displayModeBar = FALSE)
   })
-  
+
   # Create dynamic title for Sunburn & Sun Protection tab
   output$sunburnProtectionTitle <- renderUI({
     if (input$displayMode == "Sunburn") {

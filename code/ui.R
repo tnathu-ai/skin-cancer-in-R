@@ -17,6 +17,22 @@ men_data <- read.csv("../data/clean/men_melanoma_rates.csv")
 women_data <- read.csv("../data/clean/women_melanoma_rates.csv")
 sunburn_data <- read.csv("../data/clean/sunburn.csv")
 protection_data <- read.csv("../data/clean/protection.csv")
+referenceSection <- function() {
+  tags$div(
+    tags$p("References:", style = "font-weight: bold;"),
+    tags$ul(
+      style = "color: gray;",  # Adjusting style to the entire list for consistency
+      tags$li("Cancer Council. “Preventing Skin Cancer.” Www.cancer.org.au, 2023, ", 
+              tags$a(href="https://www.cancer.org.au/cancer-information/causes-and-prevention/sun-safety/preventing-skin-cancer", "www.cancer.org.au/cancer-information/causes-and-prevention/sun-safety/preventing-skin-cancer."), 
+              "."),
+      tags$li("Australian Institute of Health and Welfare (AIHW). Australian Cancer Incidence and Mortality (ACIM) books. Canberra: AIHW."),
+      tags$li("Australia, Cancer. “What Are the Risk Factors for Melanoma?” Www.canceraustralia.gov.au, 18 Dec. 2019, ", 
+              tags$a(href="https://www.canceraustralia.gov.au/cancer-types/melanoma/awareness", "www.canceraustralia.gov.au/cancer-types/melanoma/awareness."), 
+              ".")
+    )
+  )
+}
+
 
 navbarPage(
   
@@ -63,7 +79,9 @@ navbarPage(
                  selectInput("ageGroupInput", "Select Age Group:",
                              choices = sort(unique(mortality_data_long$AgeGroup)),  # Sort age categories
                              selected = "20-24")
-               )
+               ),
+               referenceSection(),  # Add this where you want references in the sidebar
+               
              ),
              mainPanel(
                uiOutput("dynamicTitleVIC"),
@@ -155,8 +173,18 @@ navbarPage(
   
   # Adding global footer to navbarPage
   footer = tags$footer(
-    tags$a("tnathu-ai @ 2023", href = "https://github.com/tnathu-ai", target = "_blank", style = "color:gray; text-align:center; display:block; padding:10px;")
+    style = "text-align: center; padding: 20px 0; border-top: 1px solid #ccc; margin-top: 20px;",  # Aligns content to the center and adds padding & margin
+    
+    tags$p("Acknowledgments", style = "font-weight: bold;"),
+    
+    tags$p("Baglin, J. (2023). Data Visualisation: From Theory to Practice. In Data Visualisation and Communication (2350) [Online Textbook]. RMIT University. ", 
+           tags$a(href="https://darkstar161610.appspot.com/secured/_book/index.html", "Retrieved from https://darkstar161610.appspot.com/secured/_book/index.html"), 
+           "."),
+    
+    tags$a("tnathu-ai @ 2023", href = "https://github.com/tnathu-ai", target = "_blank", style = "color:gray; display:block; padding-top:10px;")
   )
+  
+  
 )
   
 

@@ -91,30 +91,33 @@ function(input, output, session) {
   
   # Render Overall Melanoma Rates Plot
   output$overallPlot <- renderPlotly({
-    plot_ly(data = overall_data, x = ~Country, y = ~ASR, type = "bar", 
-            color = ~ASR, colors = c('#56B4E9', '#CC79A7'),  # Updated colors
-            hoverinfo = "text",
-            text = ~paste("Country:", Country, "<br>ASR:", ASR)) %>%
+    overall_data %>%
+      arrange(desc(ASR)) %>%
+      plot_ly(x = ~Country, y = ~ASR, type = "bar", 
+              color = ~ASR, colors = c('#56B4E9', '#CC79A7'),  # Updated colors
+              hoverinfo = "text") %>%
       layout(title = "Overall Melanoma Rates Globally") %>%
       config(displayModeBar = FALSE)  
   })
   
   # Render Melanoma Rates in Men Plot
   output$menPlot <- renderPlotly({
-    plot_ly(data = men_data, x = ~Country, y = ~ASR, type = "bar", 
-            color = ~ASR, colors = c('#56B4E9'),  # Updated colors
-            hoverinfo = "text",
-            text = ~paste("Country:", Country, "<br>ASR:", ASR)) %>%
+    men_data %>%
+      arrange(desc(ASR)) %>%
+      plot_ly(x = ~Country, y = ~ASR, type = "bar", 
+              color = ~ASR, colors = c('#56B4E9'),  # Updated colors
+              hoverinfo = "text") %>%
       layout(title = "Melanoma Rates in Men Globally") %>%
       config(displayModeBar = FALSE)
   })
   
   # Render Melanoma Rates in Women Plot
   output$womenPlot <- renderPlotly({
-    plot_ly(data = women_data, x = ~Country, y = ~ASR, type = "bar", 
-            color = ~ASR, colors = c('#CC79A7'),  # Updated colors
-            hoverinfo = "text",
-            text = ~paste("Country:", Country, "<br>ASR:", ASR)) %>%
+    women_data %>%
+      arrange(desc(ASR)) %>%
+      plot_ly(x = ~Country, y = ~ASR, type = "bar", 
+              color = ~ASR, colors = c('#CC79A7'),  # Updated colors
+              hoverinfo = "text") %>%
       layout(title = "Melanoma Rates in Women Globally") %>%
       config(displayModeBar = FALSE)
   })

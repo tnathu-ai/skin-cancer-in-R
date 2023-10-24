@@ -87,21 +87,76 @@ write.csv(women, "../../data/clean/women_melanoma_rates.csv", row.names = FALSE)
 
 
 
-```{r}
-# Colorblind-friendly colors - Okabe and Ito palette
-cb_palette <- c('Males' = '#E69F00', 'Females' = '#56B4E9')
-title_color <- '#CC79A7'  # Dark pink in Okabe and Ito palette
 
-navbarPage(
-  title = tags$span(
-    tags$img(src = "logo.png", height = "50px", width = "50px", style = "vertical-align: middle; margin-right: 10px;"),  # Adjust alignment with CSS
-    "Melanoma Incidence and Mortality in Victoria (1982-2021)"
-  ),
-  windowTitle = "Melanoma Incidence and Mortality",  # This sets the browser window title
-  header = tags$head(tags$link(rel = "shortcut icon", type = "image/x-icon", href = "logo.ico")),  # Add favicon to the webpage
-  
-  # ... [rest of the ui.R code remains the same, with tabPanels, sidebarLayout, etc.] ...
+```{r https://ncci.canceraustralia.gov.au/prevention/sun-exposure/sunburn-and-sun-protection}
+# Creating dataframes for adults and adolescents
+
+adults <- data.frame(
+  Category = c("2003-04", "2006-07", "2010-11", "2013-14", "2016-17"),
+  Male = c(37.6, 42.8, 38.0, 42.5, 43.1),
+  Female = c(44.5, 47.1, 47.2, 42.3, 48.3),
+  Persons = c(40.7, 44.8, 42.1, 42.5, 45.4)
 )
 
+adolescents <- data.frame(
+  Category = c("2003-04", "2006-07", "2010-11", "2013-14", "2016-17"),
+  Male = c(35.4, 34.2, 25.1, 25.6, 37.9),
+  Female = c(23.8, 15.7, 21.3, 23.3, 31.9),
+  Persons = c(30.2, 25.1, 23.2, 24.3, 35.2)
+)
+
+# Combine adults and adolescents dataframes into one dataframe
+
+combined_df <- rbind(
+  cbind(Group = "Adults", adults),
+  cbind(Group = "Adolescents", adolescents)
+)
+
+# Export the dataframe to sunburn_protection.csv with comments
+
+comments <- c(
+  "# Attribution: ©2023 Cancer Australia - https://ncci.canceraustralia.gov.au",
+  "# Data sourced from Cancer Council Australia’s National Sun Protection Surveys.",
+  "# Proportions over time were adjusted for age, sex, skin type and weather conditions relevant to respondents’ activities on the weekend.",
+  "# Refer to ‘About the data’ for the methodology used to adjust and apply statistical weighting to the data."
+)
+
+write.csv(combined_df, "../../data/clean/protection.csv", row.names = FALSE)
+```
+
+
+```{r}
+# Creating dataframes for sunburn data in adults and adolescents
+
+sunburn_adults <- data.frame(
+  Category = c("2003-04", "2006-07", "2010-11", "2013-14", "2016-17"),
+  Male = c(15.7, 11.9, 9.4, 11.9, 14.6),
+  Female = c(11.3, 7.9, 5.2, 7.6, 8.2),
+  Persons = c(13.5, 9.8, 7.2, 9.7, 11.3)
+)
+
+sunburn_adolescents <- data.frame(
+  Category = c("2003-04", "2006-07", "2010-11", "2013-14", "2016-17"),
+  Male = c(19.7, 24.8, 14.9, 19.3, 17.8),
+  Female = c(19.4, 16.5, 11.5, 15.2, 13.5),
+  Persons = c(19.5, 20.5, 13.2, 17.3, 15.6)
+)
+
+# Combine sunburn dataframes for adults and adolescents into one dataframe
+
+combined_sunburn_df <- rbind(
+  cbind(Group = "Adults", sunburn_adults),
+  cbind(Group = "Adolescents", sunburn_adolescents)
+)
+
+# Export the dataframe to sunburn.csv with comments
+
+sunburn_comments <- c(
+  "# Data sourced from the Cancer Council Australia’s National Sun Protection Survey.",
+  "# Proportions over time were adjusted for age, sex, and state/territory.",
+  "# Refer to ‘About the data’ for the methodology and category definitions used."
+)
+
+write.csv(combined_sunburn_df, "../../data/clean/sunburn.csv", row.names = FALSE)
 ```
 

@@ -16,6 +16,8 @@ mortality_data_long <- read.csv("../data/clean/cleaned-mortality-Melanoma-in-Vic
 overall_data <- read.csv("../data/clean/overall_melanoma_rates.csv")
 men_data <- read.csv("../data/clean/men_melanoma_rates.csv")
 women_data <- read.csv("../data/clean/women_melanoma_rates.csv")
+sunburn_data <- read.csv("../data/clean/sunburn.csv")
+protection_data <- read.csv("../data/clean/protection.csv")
 
 # Colorblind-friendly colors - Okabe and Ito palette
 cb_palette <- c('Males' = '#56B4E9', 'Females' = '#CC79A7')
@@ -115,5 +117,27 @@ function(input, output, session) {
             text = ~paste("Country:", Country, "<br>ASR:", ASR)) %>%
       layout(title = "Melanoma Rates in Women Globally") %>%
       config(displayModeBar = FALSE)
+  })
+  
+  # Create dynamic title for Sunburn & Sun Protection tab
+  output$sunburnProtectionTitle <- renderUI({
+    if (input$displayMode == "Sunburn") {
+      h3("Sunburn Rates by Gender")
+    } else {
+      h3("Sun Protection Rates by Gender")
+    }
+  })
+  
+  # Render Sunburn and Sun Protection Plot
+  output$sunburnProtectionPlot <- renderPlotly({
+    data_to_plot <- if (input$displayMode == "Sunburn") sunburn_data else protection_data
+    
+    plot_ly(data = data_to_plot, x = ~Category, y = ~Male, type = "bar", name = "Males", color = I(cb_palette["Males"])) %>%
+      add_trace(y = ~Female, name = "Females", color = I(cb_palette["Females"])) %>%
+      layout(title = if (input$displayMode == "Sunburn") "Sunburn Rates Over Time" else "Sun Protection Rates Over Time",
+             xaxis = list(title = "Year"),
+             yaxis = list(title = "Percentage (%)"),
+             barmode = 'group')  %>% # Display bars side by side for males and females
+    config(displayModeBar = FALSE)
   })
 }

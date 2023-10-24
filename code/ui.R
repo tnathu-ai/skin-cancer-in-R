@@ -9,14 +9,41 @@ library(plotly)
 
 # Colorblind-friendly colors - Okabe and Ito palette
 cb_palette <- c('Males' = '#56B4E9', 'Females' = '#CC79A7')
+# Load data
+data_long <- read.csv("../data/clean/cleaned-incidence-Melanoma-in-Victoria-1982-2021.csv")
+mortality_data_long <- read.csv("../data/clean/cleaned-mortality-Melanoma-in-Victoria-1982-2021.csv")
+overall_data <- read.csv("../data/clean/overall_melanoma_rates.csv")
+men_data <- read.csv("../data/clean/men_melanoma_rates.csv")
+women_data <- read.csv("../data/clean/women_melanoma_rates.csv")
+sunburn_data <- read.csv("../data/clean/sunburn.csv")
+protection_data <- read.csv("../data/clean/protection.csv")
 
 navbarPage(
+  
   title = tags$span(
     tags$img(src = "logo.ico", height = "50px", width = "50px", style = "vertical-align: middle; margin-right: 10px;"),  # Display logo next to the title
-    "Melanoma Data Explorer"
+    "Melanoma - Skin cancer in Australia & World"
   ),
   windowTitle = "Melanoma Incidence and Mortality",  # This sets the browser window title
-  header = tags$head(tags$link(rel = "shortcut icon", type = "image/x-icon", href = "logo.ico")),  # Add favicon to the webpage
+  header = tags$head(
+    # Link to the FontAwesome library
+    tags$link(rel = "stylesheet", href = "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"),
+    
+    # Add script for toggling the icon for collapsible panel
+    tags$script(HTML("
+    $(document).on('click', '#collapsiblePanel', function() {
+      var icon = $(this).find('.fa-chevron-down, .fa-chevron-up');
+      if (icon.hasClass('fa-chevron-down')) {
+        icon.removeClass('fa-chevron-down').addClass('fa-chevron-up');
+      } else {
+        icon.removeClass('fa-chevron-up').addClass('fa-chevron-down');
+      }
+    });
+  ")),
+    
+    # Add favicon to the webpage
+    tags$link(rel = "shortcut icon", type = "image/x-icon", href = "logo.ico")
+  ),
   
   tabPanel("Melanoma & Mortality in VIC", 
            sidebarLayout(
@@ -77,8 +104,60 @@ navbarPage(
              )
            )),
   
-  tabPanel("Tab 3", 
-           fluidRow("Content for Tab 3 goes here"))
+  # Sunburn & Sun Protection in Australia tab
+  tabPanel("Sunburn & Sun Protection in Australia",
+           sidebarLayout(
+             sidebarPanel(
+               wellPanel(
+                 h4("Definitions:"),
+                 tags$ul(
+                   tags$li("Sunburn: Any amount of reddening of the skin after being in the sun."),
+                   tags$li("Sun Protection: Use of a combination of two or more sun protection behaviours.")
+                 ),
+                 radioButtons("displayMode", "Display Mode:", 
+                              choices = c("Sunburn", "Sun Protection"), 
+                              selected = "Sunburn", inline = TRUE)
+               )
+             ),
+             mainPanel(
+               uiOutput("sunburnProtectionTitle"),
+               plotlyOutput("sunburnProtectionPlot", height = "400px"),
+               tags$br(),
+               
+               # Adding collapsible panel with sunburn protection advice
+               tags$details(
+                 id = "collapsiblePanel",  # Add an ID for easy reference
+                 style = "border: 1px solid #ccc; padding: 10px; border-radius: 5px;",  # Style the panel
+                 
+                 tags$summary(
+                   HTML("<i class='fa fa-chevron-down' style='margin-right: 5px;'></i> How can I protect my skin from the sun?"),  # Add the icon before the text
+                   style = "cursor: pointer;"  # Change the cursor to a hand when hovering over the summary
+                 ),
+                 
+                 tags$p("For best protection, Cancer Council Australia recommends:"),
+                 tags$ul(
+                   tags$li("Slip on sun-protective clothing that covers as much skin as possible."),
+                   tags$li("Slop on broad spectrum, water resistant SPF30 (or higher) sunscreen. Apply 20 minutes before going outdoors and reapply every two hours. Never use sunscreen to extend sun exposure."),
+                   tags$li("Slap on a broad brim or legionnaire style hat to shield your face, head, neck, and ears."),
+                   tags$li("Seek shade."),
+                   tags$li("Slide on sunglasses ensuring they adhere to Australian Standards.")
+                 ),
+                 tags$p("Note: UV radiation is harmful because it isn’t always detectable by sunlight or heat. This radiation can harm our skin unnoticed."),
+                 tags$p("Cancer Council Victoria has a SunSmart Global UV app which offers real-time and forecasted UV levels for locations worldwide. The app provides evidence-based sun protection advice.")
+               ),
+               tags$br(),
+               tags$a("Source: Provided data on Sunburn and Sun Protection", href = "#", style = "color:gray;"),
+               tags$a("Advice Source: Cancer Council Australia", href = "https://www.cancer.org.au/cancer-information/causes-and-prevention/sun-safety/preventing-skin-cancer", style = "color:gray;")  # Adding source for the advice
+               
+             )
+           )
+  ),
+  
+  # Adding global footer to navbarPage
+  footer = tags$footer(
+    tags$a("tnathu-ai @ 2023", href = "https://github.com/tnathu-ai", target = "_blank", style = "color:gray; text-align:center; display:block; padding:10px;")
+  )
 )
+  
 
 

@@ -25,17 +25,15 @@ referenceSection <- function(type = NULL) {
     style = "color: gray;",
     tags$li("---. (2016). Sunscreen use and subsequent melanoma risk: A population-based cohort study. Journal of Clinical Oncology, 34(33), 3976–3983.", tags$a(href="https://doi.org/10.1200/jco.2016.67.5934", "https://doi.org/10.1200/jco.2016.67.5934.")),
     tags$li("Nijsten, Tamar. (2016). Sunscreen use in the prevention of melanoma: Common sense rules. Journal of Clinical Oncology, 34(33), 3956–3958.", tags$a(href="https://doi.org/10.1200/jco.2016.69.5874", "https://doi.org/10.1200/jco.2016.69.5874.")),
-    tags$li("Australian Institute of Health and Welfare. (2023). Cancer data in Australia, data.", tags$a(href="https://www.aihw.gov.au/reports/cancer/cancer-data-in-australia/data?&page=7", "https://www.aihw.gov.au/reports/cancer/cancer-data-in-australia/data?&page=7.")),
     tags$li("Cancer Australia. (2019). What are the risk factors for melanoma?", tags$a(href="https://www.canceraustralia.gov.au/cancer-types/melanoma/awareness", "https://www.canceraustralia.gov.au/cancer-types/melanoma/awareness.")),
     tags$li("Cancer Council Victoria. (2018). Victorian cancer registry.", tags$a(href="https://www.cancervic.org.au/research/vcr", "https://www.cancervic.org.au/research/vcr.")),
-    tags$li("Cancer Australia. (2019). Melanoma of the skin statistics.", tags$a(href="https://www.canceraustralia.gov.au/cancer-types/melanoma/statistics", "https://www.canceraustralia.gov.au/cancer-types/melanoma/statistics.")),
-    tags$li("---. (2015). Skin cancer incidence and mortality - Skin cancer statistics and issues.", tags$a(href="https://wiki.cancer.org.au/skincancerstats/Skin_cancer_incidence_and_mortality", "https://wiki.cancer.org.au/skincancerstats/Skin_cancer_incidence_and_mortality."))
-  )
+    tags$li("Cancer Australia. (2019). Melanoma of the skin statistics.", tags$a(href="https://www.canceraustralia.gov.au/cancer-types/melanoma/statistics", "https://www.canceraustralia.gov.au/cancer-types/melanoma/statistics."))  )
   # Second Tab references
   global_references <- tags$ul(
     style = "color: gray;",
     tags$li("World Cancer Research Fund International. (n.d.). Skin cancer statistics.", tags$a(href="https://www.wcrf.org/cancer-trends/skin-cancer-statistics", "https://www.wcrf.org/cancer-trends/skin-cancer-statistics.")),
-    tags$li("International Agency for Research on Cancer. (n.d.). Cancer today.", tags$a(href="https://gco.iarc.fr/today/online-analysis-table?v=2020&mode=cancer&mode_population=continents&population=900&populations=900&key=asr&sex=0&cancer=39&type=0&statistic=5&prevalence=0&population_group=0&ages_group%5B%5D=0&ages_group%5B%5D=17&group_cancer=1&include_nmsc=0&include_nmsc_other=1", "https://gco.iarc.fr/today/online-analysis-table..."))
+    tags$li("International Agency for Research on Cancer. (n.d.). Cancer today.", tags$a(href="https://gco.iarc.fr/today/online-analysis-table?v=2020&mode=cancer&mode_population=continents&population=900&populations=900&key=asr&sex=0&cancer=39&type=0&statistic=5&prevalence=0&population_group=0&ages_group%5B%5D=0&ages_group%5B%5D=17&group_cancer=1&include_nmsc=0&include_nmsc_other=1", "https://gco.iarc.fr/today/online-analysis-table...")),
+    tags$li("Australian Institute of Health and Welfare. (2023). Cancer data in Australia, data.", tags$a(href="https://www.aihw.gov.au/reports/cancer/cancer-data-in-australia/data?&page=7", "https://www.aihw.gov.au/reports/cancer/cancer-data-in-australia/data?&page=7."))
   )
   
   # Third Tab references
@@ -92,9 +90,7 @@ navbarPage(
                  tags$ul(
                    tags$li(HTML("<b>Age-standardised rate (ASR):</b> Allows comparison of populations with different age structures. It's a weighted average of new cases or deaths per 100,000 standardized to the World Segi standard population.")),
                    tags$li(HTML("<b>Crude rate (CR):</b> Diagnoses per 100,000 population. It's calculated by dividing the number of newly diagnosed cases by the population estimate and then multiplying by 100,000.")),
-                   tags$li(HTML("<b>Age-specific rate:</b> Diagnoses per 100,000 population for a certain age range. It's calculated by dividing the number of new cases in the age group by the population of that age group and then multiplying by 100,000.")),
-                   tags$li(HTML("<b>Standardised incidence ratio (SIR):</b> Indicates if the observed number of cancer cases is higher or lower than expected based on a reference population. An SIR of 100 means observed cases equal expected cases. SIR >100 means more cases than expected; SIR <100 means fewer cases than expected. The significance of the difference can be evaluated using a 95% confidence interval. SIRs aren't shown when expected cases are less than 10 due to potential large fluctuation."))
-                 ),
+                   tags$li(HTML("<b>Age-specific rate:</b> Diagnoses per 100,000 population for a certain age range. It's calculated by dividing the number of new cases in the age group by the population of that age group and then multiplying by 100,000."))                 ),
                  selectInput("sexInput", "Select Gender:", 
                              choices = sort(unique(mortality_data_long$Sex)),  # Sort gender categories
                              selected = c("Males", "Females"),
@@ -171,7 +167,7 @@ navbarPage(
                  style = "border: 1px solid #ccc; padding: 10px; border-radius: 5px;",  # Style the panel
                  
                  tags$summary(
-                   HTML("<i class='fa fa-cloud-sun' style='margin-right: 5px;color: #d55e00;'></i> How can I protect my skin from the sun?"),  # Update the icon before the text
+                   HTML("<i class='fa fa-cloud-sun' style='margin-right: 5px;color: #d55e00;'></i> How can I protect my skin from the sun? ^"),  # Update the icon before the text
                    style = "cursor: pointer;"  # Change the cursor to a hand when hovering over the summary
                  ),
                  

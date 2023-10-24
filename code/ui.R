@@ -1,7 +1,7 @@
 ##################################
-# Melanoma #
-# by tnathu-ai #
-# ui.R file                      #
+# Melanoma 
+# by tnathu-ai 
+# ui.R file                      
 ##################################
 
 library(shiny)
@@ -9,6 +9,7 @@ library(plotly)
 
 # Colorblind-friendly colors - Okabe and Ito palette
 cb_palette <- c('Males' = '#56B4E9', 'Females' = '#CC79A7')
+
 # Load data
 data_long <- read.csv("www/cleaned-incidence-Melanoma-in-Victoria-1982-2021.csv")
 mortality_data_long <- read.csv("www/cleaned-mortality-Melanoma-in-Victoria-1982-2021.csv")
@@ -56,16 +57,14 @@ referenceSection <- function(type = NULL) {
 }
 
 navbarPage(
-  
   title = tags$span(
     tags$img(src = "logo.ico", height = "50px", width = "50px", style = "vertical-align: middle; margin-right: 10px;"),  # Display logo next to the title
     "Melanoma - Skin cancer in Australia & World"
   ),
-  windowTitle = "Skin Cancer",  # This sets the browser window title
+  windowTitle = "Skin Cancer AU",  # This sets the browser window title
   header = tags$head(
     # Link to the FontAwesome library
     tags$link(rel = "stylesheet", href = "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"),
-    
     # Add script for toggling the icon for collapsible panel
     tags$script(HTML("
     $(document).on('click', '#collapsiblePanel', function() {
@@ -77,7 +76,6 @@ navbarPage(
       }
     });
   ")),
-    
     # Add favicon to the webpage
     tags$link(rel = "shortcut icon", type = "image/x-icon", href = "logo.ico")
   ),
@@ -86,11 +84,22 @@ navbarPage(
            sidebarLayout(
              sidebarPanel(
                wellPanel(
-                 h4("Definitions:"),
-                 tags$ul(
-                   tags$li(HTML("<b>Age-standardised rate (ASR):</b> Allows comparison of populations with different age structures. It's a weighted average of new cases or deaths per 100,000 standardized to the World Segi standard population.")),
-                   tags$li(HTML("<b>Crude rate (CR):</b> Diagnoses per 100,000 population. It's calculated by dividing the number of newly diagnosed cases by the population estimate and then multiplying by 100,000.")),
-                   tags$li(HTML("<b>Age-specific rate:</b> Diagnoses per 100,000 population for a certain age range. It's calculated by dividing the number of new cases in the age group by the population of that age group and then multiplying by 100,000."))                 ),
+                 tags$details(
+                   id = "definitionsVIC",
+                   style = "border: 1px solid #ccc; padding: 10px; border-radius: 5px;",
+                   
+                   tags$summary(
+                     style = "cursor: pointer; padding-left: 25px; position: relative;",
+                     HTML("<i class='fas fa-chevron-down' style='position: absolute; left: 0;'></i> Definitions:"),
+                   ),
+                   
+                   tags$ul(
+                     tags$li(HTML("<b>Age-standardised rate (ASR):</b> Allows comparison of populations with different age structures. It's a weighted average of new cases or deaths per 100,000 standardized to the World Segi standard population.")),
+                     tags$li(HTML("<b>Crude rate (CR):</b> Diagnoses per 100,000 population. It's calculated by dividing the number of newly diagnosed cases by the population estimate and then multiplying by 100,000.")),
+                     tags$li(HTML("<b>Age-specific rate:</b> Diagnoses per 100,000 population for a certain age range. It's calculated by dividing the number of new cases in the age group by the population of that age group and then multiplying by 100,000."))                 
+                   )
+                 ),
+                 tags$br(), 
                  selectInput("sexInput", "Select Gender:", 
                              choices = sort(unique(mortality_data_long$Sex)),  # Sort gender categories
                              selected = c("Males", "Females"),
@@ -103,15 +112,17 @@ navbarPage(
              ),
              mainPanel(
                uiOutput("dynamicTitleVIC"),
-               plotlyOutput("timeSeriesPlot", height = "400px"),  # Adjust height if necessary
+               plotlyOutput("timeSeriesPlot", height = "300px"),  # Adjust height
                tags$br(),  
                tags$br(),  
-               plotlyOutput("mortalityPlot", height = "400px"),  # Adjust height if necessary
-               tags$a("Source: Victorian Cancer Registry (2022)", href = "https://www.cancervic.org.au/research/vcr", target = "_blank", style = "color:gray;") # Making the source a clickable link
+               plotlyOutput("mortalityPlot", height = "350px"),  # Adjust height
+               tags$a("Source: Victorian Cancer Registry (2022)", href = "https://www.cancervic.org.au/research/vcr", 
+                      target = "_blank", style = "color:gray; font-size: 0.85em;") # Making the source a clickable link
              )
            )
   ),
   
+  # Melanoma Rates Globally tab
   tabPanel("Melanoma Rates Globally",
            sidebarLayout(
              sidebarPanel(
@@ -123,26 +134,27 @@ navbarPage(
                            choices = c("Men vs Women", "Men vs Overall", "Women vs Overall"),
                            selected = "Men vs Women"),
                wellPanel(
-                 referenceSection("Global melanoma")  # Add reference section here
+                 referenceSection("Global melanoma")  # Add reference section
                )
              ),
              mainPanel(
                uiOutput("dynamicTitleGlobal"),
                conditionalPanel(condition = "input.comparePlotInput == 'Men vs Women' || input.comparePlotInput == 'Men vs Overall'",
-                                plotlyOutput("menPlot", height = "400px")),
+                                plotlyOutput("menPlot", height = "300px")),
                tags$br(),
                conditionalPanel(condition = "input.comparePlotInput == 'Men vs Women' || input.comparePlotInput == 'Women vs Overall'",
-                                plotlyOutput("womenPlot", height = "400px")),
+                                plotlyOutput("womenPlot", height = "300px")),
                tags$br(),
                conditionalPanel(condition = "input.comparePlotInput == 'Men vs Overall' || input.comparePlotInput == 'Women vs Overall'",
-                                plotlyOutput("overallPlot", height = "400px")),
+                                plotlyOutput("overallPlot", height = "300px")),
                tags$br(),
-               tags$a("Source: The data on this page comes from the Global Cancer Observatory, owned by the World Health Organization/International Agency for Research on Cancer, and is used with permission. The cancer incidence figures and ASRs were compiled using the data available", href = "https://www.wcrf.org/cancer-trends/skin-cancer-statistics/#:~:text=Melanoma%20skin%20cancer%20rates&text=Australia%20had%20the%20highest%20overall,2020%2C%20followed%20by%20New%20Zealand.", target = "_blank", style = "color:gray;")
+               tags$a("Source: The data on this page comes from the Global Cancer Observatory, owned by the World Health Organization/International Agency for Research on Cancer, and is used with permission. The cancer incidence figures and ASRs were compiled using the data available", href = "https://www.wcrf.org/cancer-trends/skin-cancer-statistics/#:~:text=Melanoma%20skin%20cancer%20rates&text=Australia%20had%20the%20highest%20overall,2020%2C%20followed%20by%20New%20Zealand.", 
+                      target = "_blank", style = "color:gray; font-size: 0.85em;")
              )
            )),
   
   # Sunburn & Sun Protection in Australia tab
-  tabPanel("Sunburn & Sun Protection in Australia",
+  tabPanel("Sunburn & Sun Protection",
            sidebarLayout(
              sidebarPanel(
                wellPanel(
@@ -159,18 +171,17 @@ navbarPage(
              ),
              mainPanel(
                uiOutput("sunburnProtectionTitle"),
-               plotlyOutput("sunburnProtectionPlot", height = "400px"),
+               plotlyOutput("sunburnProtectionPlot", height = "350px"),
                tags$br(),
                # Adding collapsible panel with sunburn protection advice
                tags$details(
                  id = "collapsiblePanel",  # Add an ID for easy reference
                  style = "border: 1px solid #ccc; padding: 10px; border-radius: 5px;",  # Style the panel
-                 
                  tags$summary(
-                   HTML("<i class='fa fa-cloud-sun' style='margin-right: 5px;color: #d55e00;'></i> How can I protect my skin from the sun? ^"),  # Update the icon before the text
-                   style = "cursor: pointer;"  # Change the cursor to a hand when hovering over the summary
+                   style = "cursor: pointer; padding-left: 25px; position: relative;",  # Update styling
+                   HTML("<i class='fas fa-chevron-down' style='position: absolute; left: 0;'></i>"),  # Adding the dropdown icon
+                   HTML("<i class='fa fa-cloud-sun' style='margin-right: 5px;color: #d55e00;'></i> How can I protect my skin from the sun?")  
                  ),
-                 
                  tags$p("For best protection, Cancer Council Australia recommends:"),
                  tags$ul(
                    tags$li("Slip on sun-protective clothing that covers as much skin as possible."),
@@ -183,27 +194,25 @@ navbarPage(
                  tags$p("Cancer Council Victoria has a SunSmart Global UV app which offers real-time and forecasted UV levels for locations worldwide. The app provides evidence-based sun protection advice.")
                ),
                tags$br(),
-               tags$a("Data Source: Cancer Australia’s National Cancer Control Indicators (NCCI)", href = "https://ncci.canceraustralia.gov.au/prevention/sun-exposure/sunburn-and-sun-protection", style = "color:gray;"),
+               tags$a("Data Source: Cancer Australia’s National Cancer Control Indicators (NCCI)", href = "https://ncci.canceraustralia.gov.au/prevention/sun-exposure/sunburn-and-sun-protection", 
+                      style = "color:gray; font-size: 0.85em;"),
                tags$br(),
-               tags$a("Advice Source: Cancer Council Australia", href = "https://www.cancer.org.au/cancer-information/causes-and-prevention/sun-safety/preventing-skin-cancer", style = "color:gray;")  # Adding source for the advice
-               
+               tags$a("Advice Source: Cancer Council Australia", href = "https://www.cancer.org.au/cancer-information/causes-and-prevention/sun-safety/preventing-skin-cancer", 
+                      style = "color:gray; font-size: 0.85em;")  # Adding source for the advice
              )
            )
   ),
   
   # Adding global footer to navbarPage
   footer = tags$footer(
-    style = "text-align: center; padding: 20px 0; border-top: 1px solid #ccc; margin-top: 20px;",  # Aligns content to the center and adds padding & margin
+    style = "text-align: center; padding: 20px 0; border-top: 1px solid #ccc; margin-top: 20px; font-size: 0.85em;",  # Aligns content to the center and adds padding & margin
     tags$p("Acknowledgments", style = "font-weight: bold;"),
     
     tags$p("Baglin, J. (2023). Data Visualisation: From Theory to Practice. In Data Visualisation and Communication (2350) [Online Textbook]. RMIT University. ", 
            tags$a(href="https://darkstar161610.appspot.com/secured/_book/index.html", "Retrieved from https://darkstar161610.appspot.com/secured/_book/index.html"), 
            "."),
-    
     tags$a("tnathu-ai @ 2023", href = "https://github.com/tnathu-ai", target = "_blank", style = "color:gray; display:block; padding-top:10px;")
   )
-  
-  
 )
   
 

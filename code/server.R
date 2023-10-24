@@ -1,7 +1,7 @@
 ##################################
-# Melanoma #
-# by tnathu-ai          #
-# server.R file                  #
+# Melanoma 
+# by tnathu-ai  
+# server.R file 
 ##################################
 
 
@@ -23,9 +23,9 @@ cb_palette <- c('Males' = '#56B4E9', 'Females' = '#CC79A7')
 
 function(input, output, session) {
   
-  # Show introduction modal when the app starts
+# Show introduction modal when the app starts
 showModal(modalDialog(
-  title = tagList(tags$i(class = "fas fa-sun", style = "color: orange; margin-right: 10px;"), "Welcome to the App!"), # Add sun icon to title
+  title = tagList(tags$i(class = "fas fa-sun", style = "color: orange; margin-right: 10px;"), "Welcome to the Skin Cancer AU app!"), # Add sun icon to title
   tags$div(style = "font-size: 1.6em;", "Do you know about melanoma - the most dangerous form of skin cancer, caused by overexposure to ultraviolet (UV) radiation from the sun?"), # Enlarged font for text
   tags$div(
     style = "padding-top: 20px; font-size: 1.4em;", # Add padding and increase font size
@@ -99,7 +99,7 @@ showModal(modalDialog(
     overall_data %>%
       arrange(desc(ASR)) %>%
       plot_ly(x = ~Country, y = ~ASR, type = "bar", 
-              color = ~ASR, colors = c('#56B4E9', '#CC79A7'),  # Updated colors
+              color = ~ASR, colors = c('#56B4E9', '#CC79A7'),  
               # Removed 'text' attribute
               hoverinfo = "y") %>%
       layout(title = "Overall Melanoma Rates Globally") %>%
@@ -111,7 +111,7 @@ showModal(modalDialog(
     men_data %>%
       arrange(desc(ASR)) %>%
       plot_ly(x = ~Country, y = ~ASR, type = "bar", 
-              color = ~ASR, colors = c('#56B4E9'),  # Updated colors
+              color = ~ASR, colors = c('#56B4E9'), 
               # Removed 'text' attribute
               hoverinfo = "y") %>%
       layout(title = "Melanoma Rates in Men Globally") %>%
@@ -123,7 +123,7 @@ showModal(modalDialog(
     women_data %>%
       arrange(desc(ASR)) %>%
       plot_ly(x = ~Country, y = ~ASR, type = "bar", 
-              color = ~ASR, colors = c('#CC79A7'),  # Updated colors
+              color = ~ASR, colors = c('#CC79A7'), 
               # Removed 'text' attribute
               hoverinfo = "y") %>%
       layout(title = "Melanoma Rates in Women Globally") %>%

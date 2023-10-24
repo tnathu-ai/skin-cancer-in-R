@@ -1,9 +1,8 @@
 ##################################
-# Melanoma Studies Analysis      #
+# Melanoma #
 # by tnathu-ai          #
 # server.R file                  #
 ##################################
-
 
 
 library(shiny)
@@ -25,17 +24,23 @@ cb_palette <- c('Males' = '#56B4E9', 'Females' = '#CC79A7')
 function(input, output, session) {
   
   # Show introduction modal when the app starts
-  showModal(modalDialog(
-    title = "Welcome to the App!",
-    "Do you know about melanoma - the most dangerous form of skin cancer, caused by overexposure to ultraviolet (UV) radiation from the sun?",
+showModal(modalDialog(
+  title = tagList(tags$i(class = "fas fa-sun", style = "color: orange; margin-right: 10px;"), "Welcome to the App!"), # Add sun icon to title
+  tags$div(style = "font-size: 1.6em;", "Do you know about melanoma - the most dangerous form of skin cancer, caused by overexposure to ultraviolet (UV) radiation from the sun?"), # Enlarged font for text
+  tags$div(
+    style = "padding-top: 20px; font-size: 1.4em;", # Add padding and increase font size
     selectInput("startup_ageGroupInput", "Please enter your age group:", 
-                choices = c("0-4", "5-9", "10-14", "15-19", "20-24", "25-29", "30-34", "35-39", "40-44", "45-49", "50-54", "55-59", "60-64", "65-69", "70-74", "75-79", "80-84", "85+")),
-    footer = tagList(
-      modalButton("Cancel"),
-      actionButton("submitBtn", "Submit")
-    ),
-    easyClose = FALSE
-  ))
+                choices = c("0-4", "5-9", "10-14", "15-19", "20-24", "25-29", "30-34", "35-39", "40-44", "45-49", "50-54", "55-59", "60-64", "65-69", "70-74", "75-79", "80-84", "85+"),
+                width = "100%")
+  ),
+  footer = tagList(
+    modalButton("Cancel"),
+    actionButton("submitBtn", "Submit")
+  ),
+  size = "l", # Making the modal larger
+  easyClose = FALSE
+))
+
   
   # Update default age group based on modal input and close modal on submit
   observeEvent(input$submitBtn, {

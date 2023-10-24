@@ -1,5 +1,5 @@
 ##################################
-# Melanoma Incidence in Victoria #
+# Melanoma #
 # by tnathu-ai #
 # ui.R file                      #
 ##################################
@@ -31,7 +31,6 @@ referenceSection <- function(type = NULL) {
     tags$li("Cancer Australia. (2019). Melanoma of the skin statistics.", tags$a(href="https://www.canceraustralia.gov.au/cancer-types/melanoma/statistics", "https://www.canceraustralia.gov.au/cancer-types/melanoma/statistics.")),
     tags$li("---. (2015). Skin cancer incidence and mortality - Skin cancer statistics and issues.", tags$a(href="https://wiki.cancer.org.au/skincancerstats/Skin_cancer_incidence_and_mortality", "https://wiki.cancer.org.au/skincancerstats/Skin_cancer_incidence_and_mortality."))
   )
-  
   # Second Tab references
   global_references <- tags$ul(
     style = "color: gray;",
@@ -47,7 +46,6 @@ referenceSection <- function(type = NULL) {
     tags$li("---. (2016). Sunscreen use and subsequent melanoma risk: A population-based cohort study. Journal of Clinical Oncology, 34(33), 3976–3983.", tags$a(href="https://doi.org/10.1200/jco.2016.67.5934", "https://doi.org/10.1200/jco.2016.67.5934.")),
     tags$li("Nijsten, Tamar. (2016). Sunscreen use in the prevention of melanoma: Common sense rules. Journal of Clinical Oncology, 34(33), 3956–3958.", tags$a(href="https://doi.org/10.1200/jco.2016.69.5874", "https://doi.org/10.1200/jco.2016.69.5874."))
   )
-  
   if (type == "Melanoma in Australia") {
     return(melanoma_references)
   } else if (type == "Global melanoma") {
@@ -59,15 +57,13 @@ referenceSection <- function(type = NULL) {
   }
 }
 
-
-
 navbarPage(
   
   title = tags$span(
     tags$img(src = "logo.ico", height = "50px", width = "50px", style = "vertical-align: middle; margin-right: 10px;"),  # Display logo next to the title
     "Melanoma - Skin cancer in Australia & World"
   ),
-  windowTitle = "Melanoma Incidence and Mortality",  # This sets the browser window title
+  windowTitle = "Skin Cancer",  # This sets the browser window title
   header = tags$head(
     # Link to the FontAwesome library
     tags$link(rel = "stylesheet", href = "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"),
@@ -171,14 +167,13 @@ navbarPage(
                uiOutput("sunburnProtectionTitle"),
                plotlyOutput("sunburnProtectionPlot", height = "400px"),
                tags$br(),
-               
                # Adding collapsible panel with sunburn protection advice
                tags$details(
                  id = "collapsiblePanel",  # Add an ID for easy reference
                  style = "border: 1px solid #ccc; padding: 10px; border-radius: 5px;",  # Style the panel
                  
                  tags$summary(
-                   HTML("<i class='fa fa-chevron-down' style='margin-right: 5px;'></i> How can I protect my skin from the sun?"),  # Add the icon before the text
+                   HTML("<i class='fa fa-cloud-sun' style='margin-right: 5px;color: #d55e00;'></i> How can I protect my skin from the sun?"),  # Update the icon before the text
                    style = "cursor: pointer;"  # Change the cursor to a hand when hovering over the summary
                  ),
                  
@@ -194,7 +189,8 @@ navbarPage(
                  tags$p("Cancer Council Victoria has a SunSmart Global UV app which offers real-time and forecasted UV levels for locations worldwide. The app provides evidence-based sun protection advice.")
                ),
                tags$br(),
-               tags$a("Source: Provided data on Sunburn and Sun Protection", href = "#", style = "color:gray;"),
+               tags$a("Data Source: Cancer Australia’s National Cancer Control Indicators (NCCI)", href = "https://ncci.canceraustralia.gov.au/prevention/sun-exposure/sunburn-and-sun-protection", style = "color:gray;"),
+               tags$br(),
                tags$a("Advice Source: Cancer Council Australia", href = "https://www.cancer.org.au/cancer-information/causes-and-prevention/sun-safety/preventing-skin-cancer", style = "color:gray;")  # Adding source for the advice
                
              )
@@ -204,7 +200,6 @@ navbarPage(
   # Adding global footer to navbarPage
   footer = tags$footer(
     style = "text-align: center; padding: 20px 0; border-top: 1px solid #ccc; margin-top: 20px;",  # Aligns content to the center and adds padding & margin
-    
     tags$p("Acknowledgments", style = "font-weight: bold;"),
     
     tags$p("Baglin, J. (2023). Data Visualisation: From Theory to Practice. In Data Visualisation and Communication (2350) [Online Textbook]. RMIT University. ", 

@@ -10,13 +10,13 @@ library(plotly)
 library(dplyr)
 
 # Load data
-data_long <- read.csv("../data/clean/cleaned-incidence-Melanoma-in-Victoria-1982-2021.csv")
-mortality_data_long <- read.csv("../data/clean/cleaned-mortality-Melanoma-in-Victoria-1982-2021.csv")
-overall_data <- read.csv("../data/clean/overall_melanoma_rates.csv")
-men_data <- read.csv("../data/clean/men_melanoma_rates.csv")
-women_data <- read.csv("../data/clean/women_melanoma_rates.csv")
-sunburn_data <- read.csv("../data/clean/sunburn.csv")
-protection_data <- read.csv("../data/clean/protection.csv")
+data_long <- read.csv("www/cleaned-incidence-Melanoma-in-Victoria-1982-2021.csv")
+mortality_data_long <- read.csv("www/cleaned-mortality-Melanoma-in-Victoria-1982-2021.csv")
+overall_data <- read.csv("www/overall_melanoma_rates.csv")
+men_data <- read.csv("www/men_melanoma_rates.csv")
+women_data <- read.csv("www/women_melanoma_rates.csv")
+sunburn_data <- read.csv("www/sunburn.csv")
+protection_data <- read.csv("www/protection.csv")
 
 # Colorblind-friendly colors - Okabe and Ito palette
 cb_palette <- c('Males' = '#56B4E9', 'Females' = '#CC79A7')

@@ -31,7 +31,7 @@ data_cases <- df_case %>%
 data_long <- data_cases %>% 
   pivot_longer(cols = `0-4`:`85+`, names_to = "AgeGroup", values_to = "Cases")
 # Save data_long to a CSV file
-write.csv(data_long, file = "../../data/clean/cleaned-incidence-Melanoma-in-Victoria-1982-2021.csv", row.names = FALSE)
+write.csv(data_long, file = "../www/cleaned-incidence-Melanoma-in-Victoria-1982-2021.csv", row.names = FALSE)
 head(data_long)
 unique_age_groups <- unique(data_long$AgeGroup)
 unique_age_groups
@@ -47,14 +47,14 @@ mortality_data_long <- df_mortality %>%
     AgeGroup = `Age Group`,     # Rename "Age Group" to "AgeGroup"
     CrudeRate = `Crude rate`    # Rename "Crude rate" to "CrudeRate"
   )
-write.csv(mortality_data_long, file = "../../data/clean/cleaned-mortality-Melanoma-in-Victoria-1982-2021.csv", row.names = FALSE)
+write.csv(mortality_data_long, file = "../www/cleaned-mortality-Melanoma-in-Victoria-1982-2021.csv", row.names = FALSE)
 head(mortality_data_long)
 unique_age_groups <- unique(mortality_data_long$AgeGroup)
 unique_age_groups
 ```
 
 
-```{r}
+```{r Melanoma Globally}
 # Overall Melanoma Rates
 overall <- data.frame(
   Rank = c("World", 1:10),
@@ -79,18 +79,17 @@ women <- data.frame(
   ASR = c(3.0, 33.6, 30.8, 28.9, 27.5, 27.4, 24.6, 22.6, 20.8, 20.4, 20.3)
 )
 women
-write.csv(overall, "../../data/clean/overall_melanoma_rates.csv", row.names = FALSE)
-write.csv(men, "../../data/clean/men_melanoma_rates.csv", row.names = FALSE)
-write.csv(women, "../../data/clean/women_melanoma_rates.csv", row.names = FALSE)
+write.csv(overall, "../www/overall_melanoma_rates.csv", row.names = FALSE)
+write.csv(men, "../www/men_melanoma_rates.csv", row.names = FALSE)
+write.csv(women, "../www/women_melanoma_rates.csv", row.names = FALSE)
 
 ```
 
 
 
 
-```{r https://ncci.canceraustralia.gov.au/prevention/sun-exposure/sunburn-and-sun-protection}
+```{r protection: https://ncci.canceraustralia.gov.au/prevention/sun-exposure/sunburn-and-sun-protection}
 # Creating dataframes for adults and adolescents
-
 adults <- data.frame(
   Category = c("2003-04", "2006-07", "2010-11", "2013-14", "2016-17"),
   Male = c(37.6, 42.8, 38.0, 42.5, 43.1),
@@ -106,14 +105,12 @@ adolescents <- data.frame(
 )
 
 # Combine adults and adolescents dataframes into one dataframe
-
 combined_df <- rbind(
   cbind(Group = "Adults", adults),
   cbind(Group = "Adolescents", adolescents)
 )
 
 # Export the dataframe to sunburn_protection.csv with comments
-
 comments <- c(
   "# Attribution: ©2023 Cancer Australia - https://ncci.canceraustralia.gov.au",
   "# Data sourced from Cancer Council Australia’s National Sun Protection Surveys.",
@@ -121,13 +118,12 @@ comments <- c(
   "# Refer to ‘About the data’ for the methodology used to adjust and apply statistical weighting to the data."
 )
 
-write.csv(combined_df, "../../data/clean/protection.csv", row.names = FALSE)
+write.csv(combined_df, "../www/protection.csv", row.names = FALSE)
 ```
 
 
-```{r}
+```{r subburn: https://ncci.canceraustralia.gov.au/prevention/sun-exposure/sunburn-and-sun-protection}
 # Creating dataframes for sunburn data in adults and adolescents
-
 sunburn_adults <- data.frame(
   Category = c("2003-04", "2006-07", "2010-11", "2013-14", "2016-17"),
   Male = c(15.7, 11.9, 9.4, 11.9, 14.6),
@@ -143,20 +139,18 @@ sunburn_adolescents <- data.frame(
 )
 
 # Combine sunburn dataframes for adults and adolescents into one dataframe
-
 combined_sunburn_df <- rbind(
   cbind(Group = "Adults", sunburn_adults),
   cbind(Group = "Adolescents", sunburn_adolescents)
 )
 
 # Export the dataframe to sunburn.csv with comments
-
 sunburn_comments <- c(
   "# Data sourced from the Cancer Council Australia’s National Sun Protection Survey.",
   "# Proportions over time were adjusted for age, sex, and state/territory.",
   "# Refer to ‘About the data’ for the methodology and category definitions used."
 )
 
-write.csv(combined_sunburn_df, "../../data/clean/sunburn.csv", row.names = FALSE)
+write.csv(combined_sunburn_df, "../www/sunburn.csv", row.names = FALSE)
 ```
 

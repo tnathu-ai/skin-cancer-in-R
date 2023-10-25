@@ -112,10 +112,10 @@ navbarPage(
              ),
              mainPanel(
                uiOutput("dynamicTitleVIC"),
-               plotlyOutput("timeSeriesPlot", height = "300px"),  # Adjust height
+               plotlyOutput("timeSeriesPlot", height = "250px"),  # Adjust height
                tags$br(),  
                tags$br(),  
-               plotlyOutput("mortalityPlot", height = "350px"),  # Adjust height
+               plotlyOutput("mortalityPlot", height = "250px"),  # Adjust height
                tags$a("Source: Victorian Cancer Registry (2022)", href = "https://www.cancervic.org.au/research/vcr", 
                       target = "_blank", style = "color:gray; font-size: 0.85em;") # Making the source a clickable link
              )
@@ -140,13 +140,13 @@ navbarPage(
              mainPanel(
                uiOutput("dynamicTitleGlobal"),
                conditionalPanel(condition = "input.comparePlotInput == 'Men vs Women' || input.comparePlotInput == 'Men vs Overall'",
-                                plotlyOutput("menPlot", height = "300px")),
+                                plotlyOutput("menPlot", height = "250px")),
                tags$br(),
                conditionalPanel(condition = "input.comparePlotInput == 'Men vs Women' || input.comparePlotInput == 'Women vs Overall'",
-                                plotlyOutput("womenPlot", height = "300px")),
+                                plotlyOutput("womenPlot", height = "250px")),
                tags$br(),
                conditionalPanel(condition = "input.comparePlotInput == 'Men vs Overall' || input.comparePlotInput == 'Women vs Overall'",
-                                plotlyOutput("overallPlot", height = "300px")),
+                                plotlyOutput("overallPlot", height = "250px")),
                tags$br(),
                tags$a("Source: The data on this page comes from the Global Cancer Observatory, owned by the World Health Organization/International Agency for Research on Cancer, and is used with permission. The cancer incidence figures and ASRs were compiled using the data available", href = "https://www.wcrf.org/cancer-trends/skin-cancer-statistics/#:~:text=Melanoma%20skin%20cancer%20rates&text=Australia%20had%20the%20highest%20overall,2020%2C%20followed%20by%20New%20Zealand.", 
                       target = "_blank", style = "color:gray; font-size: 0.85em;")

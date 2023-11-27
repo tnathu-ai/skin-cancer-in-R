@@ -20,9 +20,8 @@ Data pre-processing and exploratory analysis are key steps in our workflow. Key 
 
 ## 🖥️ Application Structure
 The app's backbone consists of two primary R scripts:
-
-`server.R`: Manages the server-side logic, handling data processing and interactive visualizations.
-`ui.R`: Crafts the user interface, organizing the layout and inputs for an intuitive user experience.
++ `server.R`: Manages the server-side logic, handling data processing and interactive visualizations.
++ `ui.R`: Crafts the user interface, organizing the layout and inputs for an intuitive user experience.
 
 ## 🌟 Key Features
 + Interactive melanoma incidence and mortality plots for Victoria, with colorblind-friendly design.
@@ -35,6 +34,6 @@ The app's backbone consists of two primary R scripts:
 Get started with the Skin Cancer AU app:
 + Ensure R and Shiny are installed on your system.
 + Clone or download the app repository.
-+ Open server.R and ui.R in RStudio.
-+ Launch the app with shiny::runApp().
++ Open `server.R` and `ui.R` in RStudio.
++ Launch the app with `shiny::runApp()`.
 
